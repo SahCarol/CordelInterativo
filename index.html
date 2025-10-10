@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cordel Interativo - Zé Violeiro</title>
+    <!-- Carrega Tailwind CSS para estilização rápida e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Define a fonte do Cordel: Inter para leitura moderna e sans-serif como fallback */
+        body { font-family: 'Inter', sans-serif; background-color: #f7f7f7; }
+        
+        /* Estilização específica para a moldura do Cordel, simulando uma xilogravura */
+        .cordel-box {
+            background: linear-gradient(145deg, #fffbe0, #fff3c9);
+            border: 5px solid #a0522d; /* Marrom-terra */
+            box-shadow: 10px 10px 0 0 #a0522d;
+            border-radius: 12px;
+            max-width: 800px;
+        }
+
+        /* Estilo para simular o efeito do texto impresso em papel simples */
+        .cordel-text {
+            color: #333;
+            line-height: 1.8;
+            font-size: 1.15rem;
+            white-space: pre-wrap; /* Mantém a formatação das estrofes */
+        }
+        
+        /* Estilo dos botões de interação */
+        .action-button {
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        }
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Loading Spinner animado */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #a0522d;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen flex items-start justify-center">
+
+    <div id="cordel-app" class="cordel-box w-full p-6 md:p-10 my-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-center text-red-700 mb-6">
+            O Cordel Interativo do Sertão
+        </h1>
+        <p class="text-lg text-center text-gray-600 mb-8 italic">
+            Zé Violeiro convida: escute, leia e decida o destino!
+        </p>
+        
+        <!-- Área de Exibição do Texto do Cordel -->
+        <div id="text-display" class="cordel-text text-center mb-10 p-4 border-b border-dashed border-red-300">
+            <!-- Texto inicial será injetado aqui pelo JS -->
+        </div>
+
+        <!-- Área de Interação (Botões e Loading) -->
+        <div id="interaction-area" class="flex flex-col items-center space-y-4">
+            
+            <!-- Indicador de Carregamento do Áudio -->
+            <div id="loading-indicator" class="hidden flex items-center justify-center space-x-2 text-red-700">
+                <div class="loader"></div>
+                <span>Zé Violeiro está afinando a viola...</span>
+            </div>
+
+            <!-- Botões de Opções -->
+            <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                <!-- Botões serão injetados aqui pelo JS -->
+            </div>
+            
+            <!-- Botão de Recomeço -->
+            <button id="restart-button" onclick="startStory()" class="hidden mt-6 bg-green-600 text-white font-bold py-3 px-8 rounded-full action-button hover:bg-green-700">
+                Começar Outra História!
+            </button>
+        </div>
+        
+        <!-- Elemento para reprodução do áudio TTS -->
+        <audio id="cordel-audio" controls class="mt-8 w-full hidden"></audio>
+
+        <!-- Informação sobre o narrador -->
+        <p class="mt-10 text-sm text-gray-500 text-center border-t pt-4">
+            <span class="font-bold">Zé Violeiro:</span> Alto, magro, e com seu inseparável chapéu de palha.
+        </p>
+
+    </div>
+
+    <script type="module">
+        // Importações do Firebase para inicialização
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        // Não precisamos de Auth ou Firestore para este app, pois é uma experiência de leitura/TTS.
+        
+        // Configurações e Variáveis Globais (Deixe a apiKey vazia, ela será injetada pelo Canvas)
+        const apiKey = ""; 
+        const TTS_MODEL = "gemini-2.5-flash-preview-tts";
+        const TTS_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${TTS_MODEL}:generateContent?key=${apiKey}`;
+
+        // Referências aos elementos do DOM
+        const textDisplay = document.getElementById('text-display');
+        const optionsContainer = document.getElementById('options-container');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const restartButton = document.getElementById('restart-button');
+        const cordelAudio = document.getElementById('cordel-audio');
+
+        // Estado da história
+        let storyState = 0; // 0: Início, 1: Cenário, 2: Ação, 3: Final
+        
+        // --- FUNÇÕES DE UTILIADADE PARA O AUDIO TTS (PCM para WAV) ---
+        
+        /**
+         * Converte base64 para ArrayBuffer.
+         * @param {string} base64 - Base64 string.
+         * @returns {ArrayBuffer}
+         */
+        const base64ToArrayBuffer = (base64) => {
+            const binaryString = atob(base64);
+            const len = binaryString.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes.buffer;
+        };
+
+        /**
+         * Converte dados PCM em um Blob WAV reproduzível.
+         * A API retorna PCM 16-bit com taxa de amostragem de 24000 Hz.
+         * @param {Int16Array} pcm16 - Dados de áudio PCM 16-bit.
+         * @param {number} sampleRate - Taxa de amostragem.
+         * @returns {Blob} O Blob do arquivo WAV.
+         */
+        const pcmToWav = (pcm16, sampleRate) => {
+            const numChannels = 1;
+            const bytesPerSample = 2; // 16-bit PCM
+            const blockAlign = numChannels * bytesPerSample;
+            const byteRate = sampleRate * blockAlign;
+            const dataSize = pcm16.byteLength;
+            const fileSize = 44 + dataSize;
+            
+            const buffer = new ArrayBuffer(fileSize);
+            const view = new DataView(buffer);
+            
+            let offset = 0;
+            
+            // RIFF chunk
+            writeString(view, offset, 'RIFF'); offset += 4;
+            view.setUint32(offset, fileSize - 8, true); offset += 4;
+            writeString(view, offset, 'WAVE'); offset += 4;
+            
+            // fmt chunk
+            writeString(view, offset, 'fmt '); offset += 4;
+            view.setUint32(offset, 16, true); offset += 4; // Sub-chunk size (16 for PCM)
+            view.setUint16(offset, 1, true); offset += 2; // Audio format (1 for PCM)
+            view.setUint16(offset, numChannels, true); offset += 2;
+            view.setUint32(offset, sampleRate, true); offset += 4;
+            view.setUint32(offset, byteRate, true); offset += 4;
+            view.setUint16(offset, blockAlign, true); offset += 2;
+            view.setUint16(offset, 16, true); offset += 2; // Bits per sample
+            
+            // data chunk
+            writeString(view, offset, 'data'); offset += 4;
+            view.setUint32(offset, dataSize, true); offset += 4;
+            
+            // Escreve os dados PCM
+            const dataView = new Uint8Array(buffer, offset);
+            dataView.set(new Uint8Array(pcm16.buffer));
+            
+            return new Blob([buffer], { type: 'audio/wav' });
+        };
+        
+        /** Escreve uma string no DataView */
+        const writeString = (view, offset, str) => {
+            for (let i = 0; i < str.length; i++) {
+                view.setUint8(offset + i, str.charCodeAt(i));
+            }
+        };
+
+        // --- LÓGICA DO CORDEL E CHAMADAS DE API ---
+
+        /**
+         * Define o conteúdo do cordel para a etapa atual e toca o áudio.
+         * @param {string} text - O texto do cordel (estrofes).
+         * @param {string} promptForTTS - O prompt que será enviado ao modelo TTS.
+         */
+        async function displayCordel(text, promptForTTS) {
+            textDisplay.innerHTML = text;
+            optionsContainer.innerHTML = '';
+            restartButton.classList.add('hidden');
+            
+            // Exibe o loading e oculta o player de áudio
+            loadingIndicator.classList.remove('hidden');
+            cordelAudio.classList.add('hidden');
+            cordelAudio.pause();
+            cordelAudio.src = '';
+
+            try {
+                const audioUrl = await fetchTTS(promptForTTS);
+                if (audioUrl) {
+                    cordelAudio.src = audioUrl;
+                    cordelAudio.classList.remove('hidden');
+                    cordelAudio.play().catch(e => console.error("Erro ao tentar tocar áudio (pode ser restrição do navegador):", e));
+                }
+            } catch (error) {
+                console.error("Erro no processamento de áudio:", error);
+                textDisplay.innerHTML += `<p class="text-red-500 mt-4 font-bold">Erro ao carregar o áudio. Por favor, tente novamente.</p>`;
+            } finally {
+                loadingIndicator.classList.add('hidden');
+            }
+        }
+        
+        /**
+         * Faz a chamada para a API TTS com retry (exponential backoff).
+         * @param {string} prompt - O texto a ser convertido em fala, incluindo instruções de estilo.
+         * @param {number} maxRetries - Máximo de tentativas.
+         * @param {number} delay - Atraso inicial em milissegundos.
+         * @returns {Promise<string|null>} URL do Blob de áudio ou null em caso de falha.
+         */
+        async function fetchTTS(prompt, maxRetries = 3, delay = 1000) {
+            // Instrução de sotaque e estilo para o modelo TTS
+            const fullPrompt = `Diga em português do Brasil com um sotaque nordestino forte, em um tom alegre e de contador de histórias: "${prompt}"`;
+
+            const payload = {
+                contents: [{ parts: [{ text: fullPrompt }] }],
+                generationConfig: {
+                    responseModalities: ["AUDIO"],
+                    speechConfig: {
+                        voiceConfig: {
+                            prebuiltVoiceConfig: { voiceName: "Puck" } // Voz Puck (Upbeat) para um bom contador de histórias
+                        }
+                    }
+                },
+                model: TTS_MODEL
+            };
+
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(TTS_API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`API response status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    const part = result?.candidates?.[0]?.content?.parts?.[0];
+                    const audioData = part?.inlineData?.data;
+                    const mimeType = part?.inlineData?.mimeType;
+
+                    if (audioData && mimeType && mimeType.startsWith("audio/L16;")) {
+                        // Extrai a taxa de amostragem
+                        const rateMatch = mimeType.match(/rate=(\d+)/);
+                        const sampleRate = rateMatch ? parseInt(rateMatch[1], 10) : 24000;
+                        
+                        // Converte e cria o Blob WAV
+                        const pcmData = base64ToArrayBuffer(audioData);
+                        const pcm16 = new Int16Array(pcmData);
+                        const wavBlob = pcmToWav(pcm16, sampleRate);
+                        return URL.createObjectURL(wavBlob);
+
+                    } else {
+                        throw new Error("Resposta de áudio inválida ou incompleta da API.");
+                    }
+                } catch (error) {
+                    console.warn(`Tentativa ${i + 1} falhou. Erro: ${error.message}. Tentando novamente em ${delay}ms...`);
+                    if (i < maxRetries - 1) {
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        delay *= 2; // Exponential backoff
+                    } else {
+                        throw new Error("Falha total na geração de áudio após várias tentativas.");
+                    }
+                }
+            }
+            return null;
+        }
+
+        // --- ETAPAS DA HISTÓRIA ---
+
+        // 1. Início da Jornada (Decisão sobre o Cenário)
+        function startStory() {
+            storyState = 1;
+            const text = `
+                "Sou eu, Zé Violeiro, cheguei pra prosear,
+                Pego a viola, afinada, pra a história começar.
+                Esse é o Cordel de João, cabra forte e destemido,
+                Que vai enfrentar o mundo sem nunca ter tido medo.
+
+                Alto, magro, de chapéu, um matuto viajante,
+                João procura a sorte, faz-se um cacto errante.
+                Mas todo herói da vida tem que ter um começo,
+                Um lugar pra dar o passo, pra sair do seu recesso.
+                
+                Diga cá, meu companheiro, onde a história vai brotar?
+                No campo seco e rachado ou no rio a beira-mar?"
+            `;
+            
+            const promptForTTS = `Sou eu, Zé Violeiro, cheguei pra prosear. Pego a viola, afinada, pra a história começar. Esse é o Cordel de João, cabra forte e destemido, que vai enfrentar o mundo sem nunca ter tido medo. Alto, magro, de chapéu, um matuto viajante, João procura a sorte, faz-se um cacto errante. Mas todo herói da vida tem que ter um começo, um lugar pra dar o passo, pra sair do seu recesso. Diga cá, meu companheiro, onde a história vai brotar? No campo seco e rachado ou no rio a beira-mar?`;
+
+            displayCordel(text, promptForTTS).then(() => {
+                const options = [
+                    { text: "A: No *Sertão* rachado e poeirento", value: "sertao", callback: chooseSetting },
+                    { text: "B: Na *Caatinga* de pedras e espinhos", value: "caatinga", callback: chooseSetting }
+                ];
+                renderOptions(options);
+            });
+        }
+        
+        // 2. Escolha do Cenário (Decisão sobre a Ação)
+        function chooseSetting(setting) {
+            storyState = 2;
+            let text, promptForTTS;
+
+            if (setting === 'sertao') {
+                text = `
+                    "O Sertão foi escolhido, lugar de sol de rachar,
+                    João caminha na caieira, sem poder água encontrar.
+                    Quando o sol batia forte, na areia que fervia,
+                    Nosso herói viu algo estranho que o caminho lhe trazia.
+
+                    Um clarão lá na vereda, um mistério a reluzir,
+                    João sabia: era perigo, mas resolveu prosseguir.
+                    Era o BANDO DE LAMPIÃO, com rifles e com facão,
+                    Querendo fazer assalto pra tocar o terror no chão!
+                    
+                    E agora, o que faz João? Diante da dura afronta?
+                    Vai pro mato ou saca a arma? O que a sua alma conta?"
+                `;
+                promptForTTS = `O Sertão foi escolhido, lugar de sol de rachar. João caminha na caieira, sem poder água encontrar. Quando o sol batia forte, na areia que fervia, nosso herói viu algo estranho que o caminho lhe trazia. Um clarão lá na vereda, um mistério a reluzir, João sabia: era perigo, mas resolveu prosseguir. Era o BANDO DE LAMPIÃO, com rifles e com facão, querendo fazer assalto pra tocar o terror no chão! E agora, o que faz João? Diante da dura afronta? Vai pro mato ou saca a arma? O que a sua alma conta?`;
+
+                const options = [
+                    { text: "A: *Se esconde* na moita e espera a noite", value: "esconder", callback: chooseAction },
+                    { text: "B: *Grita* e atira sua pedra no bandido", value: "atirar", callback: chooseAction }
+                ];
+                renderOptions(options);
+                
+            } else if (setting === 'caatinga') {
+                text = `
+                    "Na Caatinga, o cenário de espinho e juazeiro,
+                    João seguia sua trilha, como um cabra verdadeiro.
+                    Ele busca um Mandacaru, pra beber água e viver,
+                    Quando um UIVO de assombro faz seu corpo estremecer.
+
+                    Na sombra de um Xique-Xique, surgiu a *Assombração*,
+                    Um vulto branco e gigante, a BIXA-SETE-CABEÇAS do sertão.
+                    O medo cortou o vento, paralisando o valente,
+                    Pois lutar com o invisível não é coisa pra toda gente.
+                    
+                    E agora, o que faz João? Diante da dura afronta?
+                    Vai pro mato ou saca a arma? O que a sua alma conta?"
+                `;
+                promptForTTS = `Na Caatinga, o cenário de espinho e juazeiro. João seguia sua trilha, como um cabra verdadeiro. Ele busca um Mandacaru, pra beber água e viver, quando um uivo de assombro faz seu corpo estremecer. Na sombra de um Xique-Xique, surgiu a Assombração, um vulto branco e gigante, a BIXA-SETE-CABEÇAS do sertão. O medo cortou o vento, paralisando o valente, pois lutar com o invisível não é coisa pra toda gente. E agora, o que faz João? Diante da dura afronta? Vai pro mato ou saca a arma? O que a sua alma conta?`;
+                
+                const options = [
+                    { text: "A: *Saca o facão* e enfrenta o medo de frente", value: "lutar", callback: chooseAction },
+                    { text: "B: *Corre* sem olhar pra trás, na velocidade do vento", value: "correr", callback: chooseAction }
+                ];
+                renderOptions(options);
+            }
+        }
+
+        // 3. Escolha da Ação (Decisão sobre o Destino/Personagem)
+        function chooseAction(action) {
+            storyState = 3;
+            let text, promptForTTS;
+
+            switch (action) {
+                case 'esconder': // Sertão, Esconder
+                    text = `
+                        "João se escondeu na moita, feito bicho-do-mato,
+                        Esperou o bando passar, evitando o desbarato.
+                        Ele viu rifle e facão, percebeu que era perdido,
+                        E a *Esperteza* de João evitou ser ferido.
+
+                        Quando a poeira baixou, ele seguiu seu destino,
+                        Agora mais cauteloso, um cabra forte e fino.
+                        
+                        João viveu e aprendeu, e sua vida é *longa e cheia* de paz.
+                        Um final pra um herói que pensa, e não só o que faz!"
+                    `;
+                    promptForTTS = `João se escondeu na moita, feito bicho-do-mato. Esperou o bando passar, evitando o desbarato. Ele viu rifle e facão, percebeu que era perdido, e a esperteza de João evitou ser ferido. Quando a poeira baixou, ele seguiu seu destino, agora mais cauteloso, um cabra forte e fino. João viveu e aprendeu, e sua vida é longa e cheia de paz. Um final pra um herói que pensa, e não só o que faz!`;
+                    break;
+                case 'atirar': // Sertão, Atirar
+                    text = `
+                        "João gritou e atirou sua pedra, num ato de coragem,
+                        Os bandidos riram alto, e não deram nem passagem.
+                        Por ser só um contra um bando, o final foi de lamento,
+                        A *Impulsividade* custou-lhe caro, findando o seu momento.
+                        
+                        O cordel termina aqui, não há mais pra onde ir.
+                        O destino de João é *triste e breve*, pois ousou sem medir!"
+                    `;
+                    promptForTTS = `João gritou e atirou sua pedra, num ato de coragem. Os bandidos riram alto, e não deram nem passagem. Por ser só um contra um bando, o final foi de lamento. A Impulsividade custou-lhe caro, findando o seu momento. O cordel termina aqui, não há mais pra onde ir. O destino de João é triste e breve, pois ousou sem medir!`;
+                    break;
+                case 'lutar': // Caatinga, Lutar
+                    text = `
+                        "João sacou o seu facão e investiu contra o vulto,
+                        Fez a fé e não temeu, não se dobrou ao insulto!
+                        Mas a Bicha-Sete-Cabeças é feita de puro vento,
+                        O facão não pegou em nada, e João sofreu o tormento.
+
+                        O monstro o abraçou forte, sugando-lhe a energia.
+                        A *Teimosia* de João foi sua agonia.
+                        
+                        O cordel termina aqui, com o herói definhando.
+                        O destino de João é *triste e breve*, no sertão se acabando!"
+                    `;
+                    promptForTTS = `João sacou o seu facão e investiu contra o vulto. Fez a fé e não temeu, não se dobrou ao insulto! Mas a Bicha-Sete-Cabeças é feita de puro vento, o facão não pegou em nada, e João sofreu o tormento. O monstro o abraçou forte, sugando-lhe a energia. A Teimosia de João foi sua agonia. O cordel termina aqui, com o herói definhando. O destino de João é triste e breve, no sertão se acabando!`;
+                    break;
+                case 'correr': // Caatinga, Correr
+                    text = `
+                        "João correu pelo mato, mais veloz que um raio,
+                        A Bicha-Sete-Cabeças não podia segui-lo em maio.
+                        Ele usou a sua *Malícia*, o instinto de sobrevivente,
+                        Deixou a assombração pra trás, e seguiu, contente.
+                        
+                        Ele escapou do perigo, viveu pra contar a história.
+                        E a vida de João é *longa e cheia* de paz e de glória!"
+                    `;
+                    promptForTTS = `João correu pelo mato, mais veloz que um raio. A Bicha-Sete-Cabeças não podia segui-lo em maio. Ele usou a sua malícia, o instinto de sobrevivente, deixou a assombração pra trás, e seguiu, contente. Ele escapou do perigo, viveu pra contar a história. E a vida de João é longa e cheia de paz e de glória!`;
+                    break;
+                default:
+                    return;
+            }
+
+            displayCordel(text, promptForTTS).then(() => {
+                // Após o final, exibe apenas o botão de recomeço
+                restartButton.classList.remove('hidden');
+                cordelAudio.addEventListener('ended', () => {
+                     restartButton.classList.remove('hidden');
+                }, { once: true });
+            });
+        }
+        
+        // --- RENDERIZAÇÃO E INICIALIZAÇÃO ---
+
+        /**
+         * Renderiza os botões de opção.
+         * @param {Array<Object>} options - Lista de opções {text, value, callback}.
+         */
+        function renderOptions(options) {
+            optionsContainer.innerHTML = '';
+            
+            // Oculta o botão de recomeço enquanto houver opções
+            restartButton.classList.add('hidden');
+            
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.innerHTML = option.text;
+                button.className = 'action-button bg-red-800 text-white font-bold py-3 px-6 rounded-lg hover:bg-red-700 transition duration-150 ease-in-out';
+                button.onclick = () => {
+                    // Desabilita todos os botões após a escolha
+                    Array.from(optionsContainer.querySelectorAll('button')).forEach(btn => btn.disabled = true);
+                    option.callback(option.value);
+                };
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        // Inicia o Cordel ao carregar a página
+        window.onload = startStory;
+
+    </script>
+</body>
+</html>
