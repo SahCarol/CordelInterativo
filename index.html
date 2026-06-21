@@ -83,7 +83,6 @@
             color: #2c1810;
             line-height: 2.4;
             font-size: 1.15rem;
-            white-space: pre-wrap;
             padding: 25px 20px;
             background: rgba(255, 248, 235, 0.6);
             border-left: 4px solid #8B7355;
@@ -93,6 +92,15 @@
             min-height: 200px;
             margin: 20px 0;
             box-shadow: inset 0 0 30px rgba(139, 90, 43, 0.05);
+        }
+
+        /* ESTILO CORRETO PARA O TEXTO - ALINHADO À ESQUERDA */
+        .cordel-text p {
+            margin: 0;
+            padding: 0;
+            text-align: left;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
 
         .cordel-text strong {
@@ -252,7 +260,23 @@
             processando = true;
 
             textoEl.classList.remove('fade-in');
-            textoEl.innerHTML = negrito(texto);
+            
+            // Remove espaços extras e quebras de linha no início/fim
+            let textoLimpo = texto.trim();
+            
+            // Divide em linhas e remove espaços extras
+            let linhas = textoLimpo.split('\n').map(linha => linha.trim());
+            
+            // Junta as linhas com quebra de linha, mas sem indentação extra
+            let textoFormatado = linhas.join('\n');
+            
+            // Converte quebras de linha para <br> e mantém espaçamento
+            textoFormatado = textoFormatado.replace(/\n/g, '<br>');
+            
+            // Adiciona negrito
+            textoFormatado = negrito(textoFormatado);
+            
+            textoEl.innerHTML = textoFormatado;
             botoesEl.innerHTML = '';
             reiniciarEl.classList.add('hidden');
 
@@ -290,10 +314,9 @@
         }
 
         // ============================================================
-        // HISTÓRIA - ESTRUTURA NOVA
+        // HISTÓRIA
         // ============================================================
 
-        // PASSO 1: INÍCIO
         function inicio() {
             historico = [];
             caminhoEl.textContent = '🌵 Nova jornada começa';
@@ -316,7 +339,6 @@
             );
         }
 
-        // PASSO 2: CENÁRIOS
         function passo2(valor) {
             const nomes = { sertao: 'Sertão', caatinga: 'Caatinga', litoral: 'Litoral' };
             addCaminho(nomes[valor]);
@@ -366,7 +388,6 @@
             }
         }
 
-        // PASSO 3: AÇÕES SERTÃO (4 finais)
         function passo3Sertao(valor) {
             addCaminho(valor === 'caravana' ? 'Caravana' : 'Gruta');
 
@@ -401,7 +422,6 @@
             }
         }
 
-        // PASSO 3: AÇÕES CAATINGA (4 finais)
         function passo3Caatinga(valor) {
             addCaminho(valor === 'cabana' ? 'Cabana' : 'Cobra');
 
@@ -436,7 +456,6 @@
             }
         }
 
-        // PASSO 3: AÇÕES LITORAL (4 finais)
         function passo3Litoral(valor) {
             addCaminho(valor === 'pescador' ? 'Pescador' : 'Moça');
 
@@ -471,9 +490,6 @@
             }
         }
 
-        // ============================================================
-        // INICIAR
-        // ============================================================
         window.onload = inicio;
     </script>
 </body>
