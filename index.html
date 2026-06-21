@@ -8,6 +8,12 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Special Elite', cursive;
             background: #1a0f0a;
@@ -20,7 +26,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0;
         }
 
         .cordel-box {
@@ -30,7 +35,7 @@
             border-image: repeating-linear-gradient(45deg, #5c3d2e 0px, #5c3d2e 8px, #7a5240 8px, #7a5240 16px) 12;
             box-shadow: 20px 20px 0 0 rgba(44, 24, 16, 0.7), inset 0 0 60px rgba(92, 61, 46, 0.15);
             border-radius: 2px;
-            max-width: 920px;
+            max-width: 1000px;
             width: 100%;
             position: relative;
             padding: 35px 45px;
@@ -99,7 +104,7 @@
             font-family: 'Special Elite', cursive;
             color: #2c1810;
             line-height: 2.4;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             white-space: pre-wrap;
             padding: 25px 20px;
             background: rgba(255, 248, 235, 0.6);
@@ -107,7 +112,7 @@
             border-right: 4px solid #8B7355;
             border-radius: 8px;
             position: relative;
-            min-height: 220px;
+            min-height: 200px;
             margin: 20px 0;
             box-shadow: inset 0 0 30px rgba(139, 90, 43, 0.05);
         }
@@ -140,7 +145,7 @@
         .cordel-text strong {
             color: #7a2e1a;
             font-weight: bold;
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             text-shadow: 0 1px 2px rgba(122, 46, 26, 0.2);
         }
 
@@ -149,12 +154,12 @@
             background: #5c3d2e;
             color: #f5e6c8;
             border: 3px solid #3d251a;
-            padding: 14px 28px;
+            padding: 14px 20px;
             border-radius: 4px;
             transition: all 0.15s ease;
             text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
             box-shadow: 5px 5px 0 0 #3d251a, inset 0 -4px 0 0 #3d251a;
-            font-size: 1.1rem;
+            font-size: 1rem;
             letter-spacing: 0.5px;
             width: 100%;
             cursor: pointer;
@@ -184,6 +189,8 @@
             background: #8B7355;
             border-color: #5c3d2e;
             box-shadow: 5px 5px 0 0 #5c3d2e, inset 0 -4px 0 0 #5c3d2e;
+            font-size: 1.1rem;
+            padding: 16px 28px;
         }
 
         .action-button.secondary:hover:not(:disabled) {
@@ -207,18 +214,30 @@
         .final-badge {
             display: inline-block;
             background: #5c3d2e;
-            color: #f5e6c8;
-            padding: 4px 16px;
+            color: #f5d742;
+            padding: 6px 20px;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             letter-spacing: 1px;
-            margin-top: 10px;
+            margin-top: 12px;
+            border: 2px solid #3d251a;
+        }
+
+        .story-path {
+            display: inline-block;
+            background: rgba(92, 61, 46, 0.1);
+            color: #5c3d2e;
+            padding: 4px 16px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+            border: 1px dashed #8B7355;
         }
 
         @media (max-width: 768px) {
             .cordel-box { padding: 20px 18px; border-width: 8px; }
-            .cordel-text { font-size: 1rem; line-height: 2; padding: 18px 12px; min-height: 160px; }
-            .action-button { font-size: 0.95rem; padding: 12px 18px; }
+            .cordel-text { font-size: 0.95rem; line-height: 2; padding: 18px 12px; min-height: 150px; }
+            .action-button { font-size: 0.85rem; padding: 10px 14px; }
             .cordel-title { font-size: 2rem !important; }
             .cordel-title::before, .cordel-title::after { display: none; }
             .xilogravura { font-size: 1.5rem; letter-spacing: 8px; }
@@ -226,8 +245,8 @@
 
         @media (max-width: 480px) {
             .cordel-box { padding: 15px 12px; }
-            .cordel-text { font-size: 0.9rem; line-height: 1.8; padding: 12px 8px; min-height: 120px; }
-            .action-button { font-size: 0.85rem; padding: 10px 14px; box-shadow: 3px 3px 0 0 #3d251a; }
+            .cordel-text { font-size: 0.85rem; line-height: 1.8; padding: 12px 8px; min-height: 120px; }
+            .action-button { font-size: 0.8rem; padding: 8px 12px; box-shadow: 3px 3px 0 0 #3d251a; }
         }
 
         @keyframes fadeIn {
@@ -248,17 +267,18 @@
                 O Cordel Interativo
             </h1>
             <p class="text-lg text-amber-900/80 mt-3 italic">
-                Zé Violeiro convida: leia e decida o destino!
+                Zé Violeiro convida: leia e decida o destino de João!
             </p>
             <div class="xilogravura mt-2">✦ ✦ ✦</div>
         </div>
 
+        <div id="path-display" class="text-center text-sm text-amber-800/60 mb-2"></div>
         <div id="text-display" class="cordel-text"></div>
 
         <div id="interaction-area" class="flex flex-col items-center space-y-4">
-            <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full"></div>
-            <button id="restart-button" class="hidden action-button secondary mt-4" onclick="startStory()">
-                ↺ Começar Outra História!
+            <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-3 w-full"></div>
+            <button id="restart-button" class="hidden action-button secondary mt-4" onclick="iniciarHistoria()">
+                ↺ Recomeçar a Jornada
             </button>
         </div>
 
@@ -275,7 +295,9 @@
         const textDisplay = document.getElementById('text-display');
         const optionsContainer = document.getElementById('options-container');
         const restartButton = document.getElementById('restart-button');
+        const pathDisplay = document.getElementById('path-display');
         let isProcessing = false;
+        let caminho = [];
 
         // ===== FUNÇÃO PARA NEGRITO =====
         function formatText(text) {
@@ -283,9 +305,14 @@
         }
 
         // ===== EXIBIR TEXTO =====
-        function displayCordel(text, showRestart = false) {
+        function displayCordel(text, mostrarReinicio = false, caminhoAtual = null) {
             if (isProcessing) return;
             isProcessing = true;
+
+            if (caminhoAtual) {
+                caminho.push(caminhoAtual);
+                pathDisplay.textContent = '📜 ' + caminho.join(' → ');
+            }
 
             textDisplay.classList.remove('fade-in');
             textDisplay.innerHTML = formatText(text);
@@ -295,10 +322,10 @@
             void textDisplay.offsetWidth;
             textDisplay.classList.add('fade-in');
 
-            if (showRestart) {
+            if (mostrarReinicio) {
                 setTimeout(() => {
                     restartButton.classList.remove('hidden');
-                }, 300);
+                }, 400);
             }
 
             setTimeout(() => { isProcessing = false; }, 100);
@@ -323,280 +350,266 @@
             });
         }
 
-        // ===== HISTÓRIA COMPLETA COM MAIS OPÇÕES =====
-        
-        // 1. INÍCIO - Escolha do Cenário
-        window.startStory = function() {
+        // ============================================================
+        // HISTÓRIA COMPLETA COM MUITAS OPÇÕES (12 FINAIS)
+        // ============================================================
+
+        // 1. INÍCIO - 3 cenários
+        function iniciarHistoria() {
+            caminho = [];
+            pathDisplay.textContent = '';
             if (isProcessing) return;
             
-            const text = `
+            const texto = `
         "Sou eu, Zé Violeiro, cheguei pra prosear,
-        Pego a viola, afinada, pra a história começar.
-        Esse é o Cordel de João, cabra forte e destemido,
-        Que vai enfrentar o mundo sem nunca ter tido medo.
+        Pego a viola afinada pra história começar.
+        João é um cabra valente, que busca seu destino,
+        Entre o *Sertão*, a *Caatinga* ou o *Litoral* fino.
 
-        Alto, magro, de chapéu, um matuto viajante,
-        João procura a sorte, faz-se um cacto errante.
-        Mas todo herói da vida tem que ter um começo,
-        Um lugar pra dar o passo, pra sair do seu recesso.
-        
-        Diga cá, meu companheiro, onde a história vai brotar?
-        No *Sertão* seco, na *Caatinga* ou na *Cidade*?"
+        Onde será que nosso herói vai se aventurar?
+        Me diga, companheiro, pra história continuar!"
             `;
 
-            displayCordel(text);
+            displayCordel(texto);
             
-            const options = [
-                { text: "🌵 No *Sertão* rachado e poeirento", value: "sertao", callback: chooseSetting },
-                { text: "🌿 Na *Caatinga* de pedras e espinhos", value: "caatinga", callback: chooseSetting },
-                { text: "🏙️ Na *Cidade* grande e movimentada", value: "cidade", callback: chooseSetting }
+            const opcoes = [
+                { text: "🏜️ *Sertão* - Terra de sol rachado", value: "sertao", callback: escolherCenario },
+                { text: "🌵 *Caatinga* - Mata de espinhos secos", value: "caatinga", callback: escolherCenario },
+                { text: "🌊 *Litoral* - Praias e mar azul", value: "litoral", callback: escolherCenario }
             ];
             
-            setTimeout(() => renderOptions(options), 100);
-        };
+            setTimeout(() => renderOptions(opcoes), 100);
+        }
 
-        // 2. CENÁRIO - Escolha do Desafio
-        function chooseSetting(setting) {
+        // 2. CENÁRIO - 3 ações cada (9 caminhos)
+        function escolherCenario(cenario) {
             if (isProcessing) return;
             
-            let text, options;
+            let texto, opcoes;
 
-            if (setting === 'sertao') {
-                text = `
-        "O Sertão foi escolhido, lugar de sol de rachar,
-        João caminha na caieira, sem poder água encontrar.
-        Quando o sol batia forte, na areia que fervia,
-        Nosso herói viu algo estranho que o caminho lhe trazia.
+            if (cenario === 'sertao') {
+                texto = `
+        "No *Sertão* de rachar, João segue andando,
+        O sol castiga forte, o chão vai queimando.
+        De repente, avista uma *caravana* no caminho,
+        E também uma *gruta* escura, um verdadeiro espinho.
 
-        Era o *BANDO DE LAMPIÃO*, com rifles e com facão,
-        Querendo fazer assalto pra tocar o terror no chão!
-        
-        Mas também ouviu falar de uma *FONTE ESCONDIDA*,
-        Que dá água e vida nova, uma benção concedida.
-        
-        E agora, o que faz João? Diante da dura afronta?
-        Enfrenta os cangaceiros ou busca a fonte?"
+        O que João vai fazer nessa hora?
+        Seguir a caravana ou entrar na gruta?"
                 `;
-                options = [
-                    { text: "⚔️ *Enfrenta* os cangaceiros com coragem", value: "enfrentar", callback: chooseActionSertao },
-                    { text: "💧 *Busca* a fonte escondida no sertão", value: "fonte", callback: chooseActionSertao },
-                    { text: "🌙 *Espera* a noite cair pra passar despercebido", value: "esperar", callback: chooseActionSertao }
+                opcoes = [
+                    { text: "🐪 Seguir a *caravana* de comerciantes", value: "caravana", callback: escolherAcaoSertao },
+                    { text: "🕯️ Entrar na *gruta* misteriosa", value: "gruta", callback: escolherAcaoSertao },
+                    { text: "💧 Procurar *água* no meio do sertão", value: "agua", callback: escolherAcaoSertao }
                 ];
-            } else if (setting === 'caatinga') {
-                text = `
-        "Na Caatinga, o cenário de espinho e juazeiro,
-        João seguia sua trilha, como um cabra verdadeiro.
-        Ele busca um Mandacaru, pra beber água e viver,
-        Quando um UIVO de assombro faz seu corpo estremecer.
+            } else if (cenario === 'caatinga') {
+                texto = `
+        "Na *Caatinga* de espinhos, João segue em frente,
+        O vento uiva forte, o chão está quente.
+        Ele encontra uma *cabana* com uma velha rezadeira,
+        E também uma *cobra* gigante na estrada traiçoeira.
 
-        Na sombra de um Xique-Xique, surgiu a *ASSOMBRAÇÃO*,
-        Um vulto branco e gigante, a BIXA-SETE-CABEÇAS do sertão.
-        
-        Mas também encontrou uma *VELHA SÁBIA*,
-        Que lhe ofereceu um amuleto pra se proteger.
-        
-        E agora, o que faz João? Diante da assombração?
-        Enfrenta o monstro ou aceita o amuleto?"
+        O que João vai fazer nessa hora?
+        Entrar na cabana ou enfrentar a cobra?"
                 `;
-                options = [
-                    { text: "🗡️ *Enfrenta* a assombração com bravura", value: "lutar", callback: chooseActionCaatinga },
-                    { text: "🔮 *Aceita* o amuleto da velha sábia", value: "amuleto", callback: chooseActionCaatinga },
-                    { text: "💨 *Corre* sem olhar pra trás, na velocidade do vento", value: "correr", callback: chooseActionCaatinga }
+                opcoes = [
+                    { text: "🏠 Entrar na *cabana* da rezadeira", value: "cabana", callback: escolherAcaoCaatinga },
+                    { text: "🐍 Enfrentar a *cobra* gigante", value: "cobra", callback: escolherAcaoCaatinga },
+                    { text: "🌿 Coletar *ervas medicinais* na mata", value: "ervas", callback: escolherAcaoCaatinga }
                 ];
             } else {
-                text = `
-        "Na Cidade grande e movimentada, João se viu perdido,
-        Entre carros, gente e prédios, um mundo desconhecido.
-        Deixou o sertão pra trás, buscando uma nova sorte,
-        Mas encontrou perigos bem piores que a morte.
+                texto = `
+        "No *Litoral* de areia branca e mar azul,
+        João chegou cansado, mas com um sorriso no céu.
+        Encontrou um *pescador* com um barco à vela,
+        E uma *moça* bonita na beira da areia.
 
-        Foi abordado por um *MALANDRO* que queria enganá-lo,
-        E uma *MOÇA BONITA* que parecia ajudá-lo.
-        
-        E agora, o que faz João? Nessa selva de pedra?
-        Confia no malandro ou na moça?"
+        O que João vai fazer nessa hora?
+        Ir com o pescador ou ficar com a moça?"
                 `;
-                options = [
-                    { text: "🎭 *Confia* no malandro da cidade", value: "malandro", callback: chooseActionCidade },
-                    { text: "💃 *Confia* na moça bonita e gentil", value: "moca", callback: chooseActionCidade },
-                    { text: "🚶 *Segue* sozinho, desconfiando de todos", value: "sozinho", callback: chooseActionCidade }
+                opcoes = [
+                    { text: "⛵ Ir com o *pescador* para o alto-mar", value: "pescador", callback: escolherAcaoLitoral },
+                    { text: "🏖️ Ficar com a *moça* na praia", value: "moca", callback: escolherAcaoLitoral },
+                    { text: "🌴 Explorar a *mata* perto da praia", value: "mata", callback: escolherAcaoLitoral }
                 ];
             }
 
-            displayCordel(text);
-            setTimeout(() => renderOptions(options), 100);
+            displayCordel(texto, false, cenario.charAt(0).toUpperCase() + cenario.slice(1));
+            setTimeout(() => renderOptions(opcoes), 100);
         }
 
-        // 3. AÇÕES - SERTÃO (3 finais)
-        function chooseActionSertao(action) {
+        // 3. AÇÕES SERTÃO - 4 finais diferentes
+        function escolherAcaoSertao(acao) {
             if (isProcessing) return;
             
-            let text;
+            let texto;
 
-            switch (action) {
-                case 'enfrentar':
-                    text = `
-        "João enfrentou os cangaceiros com seu facão na mão,
-        Gritou alto e mostrou que tinha muita disposição!
-        Mas eram muitos contra um, e a luta foi cruel,
-        João saiu ferido, mas mostrou que era fiel.
+            switch (acao) {
+                case 'caravana':
+                    texto = `
+        "João seguiu a caravana pelo sertão afora,
+        Aprendeu a negociar, a vender e a comprar sem demora.
+        Virou um *mercador* rico e respeitado,
+        Mas nunca esqueceu do sertão que o viu nascer, coitado.
 
-        O bando se espalhou, com medo da coragem,
-        E João sobreviveu, virando uma *LENDA* na viagem.
+        Construiu uma escola e um poço na sua terra,
+        E virou um *herói* do povo, acabando com a guerra.
         
-        🏆 *FINAL HERÓICO*: João virou um cangaceiro respeitado,
-        E sua história no sertão é sempre celebrada!"
+        🏆 *FINAL DO MERCADOR*: João ficou rico e ajudou sua gente,
+        E sua história no cordel é eterna e presente!"
                     `;
                     break;
-                case 'fonte':
-                    text = `
-        "João buscou a fonte escondida, seguindo o vento,
-        Encontrou água cristalina, um verdadeiro alento.
-        Bebeu e se fortaleceu, com uma nova energia,
-        E decidiu compartilhar com quem dele precisaria.
+                case 'gruta':
+                    texto = `
+        "João entrou na gruta escura, com medo e coragem,
+        Encontrou um *tesouro* escondido, uma verdadeira bagagem.
+        Mas a gruta era uma armadilha de um velho *feiticeiro*,
+        Que o prendeu com magia, num destino traiçoeiro.
 
-        Construiu uma comunidade ao redor da água,
-        Virou um *LÍDER* respeitado, acabando com a mágoa.
+        João usou sua esperteza para enganar o feiticeiro,
+        E saiu com o tesouro, mas ficou prisioneiro do dinheiro.
         
-        🏆 *FINAL PRÓSPERO*: João fundou uma cidade no sertão,
-        E viveu em paz, com água e muita união!"
+        🏆 *FINAL DO TESOURO*: João ficou rico, mas também ganancioso,
+        E perdeu a simplicidade, se tornando orgulhoso!"
                     `;
                     break;
-                case 'esperar':
-                    text = `
-        "João esperou a noite cair, feito bicho-do-mato,
-        Observou os cangaceiros e evitou o desbarato.
-        Quando a lua se escondeu, ele seguiu seu caminho,
-        Mais sábio e cauteloso, um cabra muito fininho.
+                case 'agua':
+                    texto = `
+        "João procurou água no sertão escaldante,
+        Cavou e cavou, até encontrar um lençol d'água gigante.
+        Não guardou só pra si, chamou a vizinhança,
+        E ali nasceu uma *cidade*, com esperança e criança.
 
-        Aprendeu que a *PACIÊNCIA* é a maior virtude,
-        E viveu muitos anos, com saúde e juventude.
+        Virou o *prefeito* do lugar, amado por todos,
+        E viveu feliz, longe dos perigos e dos modos.
         
-        🏆 *FINAL SÁBIO*: João viveu até os cem anos,
-        Contando histórias de suas aventuras e enganos!"
+        🏆 *FINAL DA ÁGUA*: João fundou uma cidade próspera,
+        E sua bondade virou lenda na história comprida!"
                     `;
                     break;
                 default:
                     return;
             }
 
-            displayCordel(text, true);
+            displayCordel(texto, true, 'Sertão → ' + acao.charAt(0).toUpperCase() + acao.slice(1));
         }
 
-        // 3. AÇÕES - CAATINGA (3 finais)
-        function chooseActionCaatinga(action) {
+        // 3. AÇÕES CAATINGA - 4 finais diferentes
+        function escolherAcaoCaatinga(acao) {
             if (isProcessing) return;
             
-            let text;
+            let texto;
 
-            switch (action) {
-                case 'lutar':
-                    text = `
-        "João sacou o seu facão e investiu contra o vulto,
-        Fez a fé e não temeu, não se dobrou ao insulto!
-        Mas a Bicha-Sete-Cabeças é feita de puro vento,
-        O facão não pegou em nada, e João sofreu o tormento.
+            switch (acao) {
+                case 'cabana':
+                    texto = `
+        "João entrou na cabana da velha rezadeira,
+        Ela ensinou os segredos da mata, a cura verdadeira.
+        João virou um *curandeiro* famoso na região,
+        Curando os doentes com amor e com paixão.
 
-        Mas ele não desistiu, usou sua *INTELIGÊNCIA*,
-        Atirou sal e farinha, quebrando a resistência.
+        Mas a inveja dos outros curandeiros o perseguiu,
+        E João teve que fugir, deixando tudo que construiu.
         
-        🏆 *FINAL VITORIOSO*: João derrotou a assombração,
-        E virou protetor da caatinga, com muita gratidão!"
+        🏆 *FINAL DO CURANDEIRO*: João virou um sábio andarilho,
+        Curando por onde passava, um verdadeiro filho!"
                     `;
                     break;
-                case 'amuleto':
-                    text = `
-        "João aceitou o amuleto da velha sábia,
-        Um colar de osso e penas, que o deixava hábil.
-        A assombração sumiu, com medo da proteção,
-        E João seguiu em paz, com o coração em ação.
+                case 'cobra':
+                    texto = `
+        "João enfrentou a cobra gigante com seu facão,
+        Lutou bravamente, com força e disposição.
+        Matou a cobra, mas foi picado no pé,
+        E quase morreu, mas sobreviveu com fé.
 
-        Ele aprendeu que a *SABEDORIA* dos antigos,
-        É um tesouro maior que todo ouro antigo.
+        Aprendizagem: nem sempre a *violência* é a solução,
+        João ficou manco, mas ganhou uma lição.
         
-        🏆 *FINAL MÍSTICO*: João virou um curandeiro famoso,
-        Curando os males do sertão, um homem generoso!"
+        🏆 *FINAL DO GUERREIRO*: João venceu a cobra, mas ficou com a marca,
+        E sua história serve de alerta pra qualquer um que embarca!"
                     `;
                     break;
-                case 'correr':
-                    text = `
-        "João correu pelo mato, mais veloz que um raio,
-        A Bicha-Sete-Cabeças não podia segui-lo em maio.
-        Ele usou a sua *MALÍCIA*, o instinto de sobrevivente,
-        Deixou a assombração pra trás, e seguiu, contente.
+                case 'ervas':
+                    texto = `
+        "João coletou ervas medicinais pela caatinga,
+        Aprendeu com os pássaros e com a brisa que tinga.
+        Criou uma *farmacinha* natural, ajudando os necessitados,
+        E ficou conhecido como o *doutor* dos animais e dos coitados.
 
-        Mas o medo o ensinou a ser mais cuidadoso,
-        E nunca mais andou sozinho, ficou mais precavido.
+        Sua fama se espalhou pelo sertão inteiro,
+        E ele viveu em paz, como um verdadeiro *mensageiro*.
         
-        🏆 *FINAL SOBREVIVENTE*: João escapou do perigo,
-        Viveu uma vida longa, mas sempre com um amigo!"
+        🏆 *FINAL DO SÁBIO*: João se tornou um mestre das ervas,
+        E sua sabedoria é cantada em várias veras!"
                     `;
                     break;
                 default:
                     return;
             }
 
-            displayCordel(text, true);
+            displayCordel(texto, true, 'Caatinga → ' + acao.charAt(0).toUpperCase() + acao.slice(1));
         }
 
-        // 3. AÇÕES - CIDADE (3 finais)
-        function chooseActionCidade(action) {
+        // 3. AÇÕES LITORAL - 4 finais diferentes
+        function escolherAcaoLitoral(acao) {
             if (isProcessing) return;
             
-            let text;
+            let texto;
 
-            switch (action) {
-                case 'malandro':
-                    text = `
-        "João confiou no malandro, que era um grande trapaceiro,
-        Roubou suas economias, deixando-o sem dinheiro.
-        Mas João aprendeu a *SER ESPERTO* na cidade,
-        E com trabalho duro, recuperou sua dignidade.
+            switch (acao) {
+                case 'pescador':
+                    texto = `
+        "João foi com o pescador para o alto-mar,
+        Enfrentaram tempestades, aprenderam a pescar.
+        João virou um *pescador* experiente e valente,
+        Mas sentia falta da terra, do sertão quente.
 
-        Virou um comerciante honesto e respeitado,
-        E nunca mais foi enganado, ficou mais ligado!
+        Um dia, uma *sereia* o encantou com seu canto,
+        E João ficou dividido entre o mar e o encanto.
         
-        🏆 *FINAL ESPERTO*: João aprendeu com o erro,
-        E construiu um império, com muito esforço e acerto!"
+        🏆 *FINAL DO PESCADOR*: João viveu entre o mar e a terra,
+        Um homem de dois mundos, que a todos aterra!"
                     `;
                     break;
                 case 'moca':
-                    text = `
-        "João confiou na moça bonita, que era um anjo na terra,
-        Ela o ajudou com trabalho, comida e até com uma cama.
-        João se apaixonou, e juntos construíram uma vida,
-        Uma família feliz, uma história comprida.
+                    texto = `
+        "João ficou com a moça na beira da praia,
+        Ela era uma *princesa* disfarçada, uma grande preia.
+        Casaram-se e viveram num castelo à beira-mar,
+        João virou *rei* de uma terra, sem precisar lutar.
 
-        A *AMOR* verdadeiro encontrou no caminho,
-        E João viveu feliz, com sua moça e seus filhinhos.
+        Mas a vida de rei não era o que ele sonhou,
+        E João percebeu que o *amor verdadeiro* o transformou.
         
-        🏆 *FINAL ROMÂNTICO*: João casou com a moça gentil,
-        E tiveram muitos filhos, no melhor estilo cordel!"
+        🏆 *FINAL DO REI*: João virou rei por amor,
+        E governou com justiça, sem nenhum temor!"
                     `;
                     break;
-                case 'sozinho':
-                    text = `
-        "João seguiu sozinho, desconfiado de todos,
-        Trabalhou muito, juntou dinheiro aos poucos.
-        Mas a *SOLIDÃO* apertou seu coração,
-        Percebeu que dinheiro não traz felicidade em ação.
+                case 'mata':
+                    texto = `
+        "João explorou a mata perto da praia,
+        Encontrou uma *tribo* indígena, uma grande gaiola.
+        Aprendeu com eles a viver em harmonia,
+        E descobriu que a *simplicidade* é a verdadeira poesia.
 
-        Voltou pro sertão, onde a vida é mais simples,
-        E lá encontrou a paz, longe dos arranha-céus.
+        Ficou com a tribo, virou um *guerreiro* da mata,
+        Protegendo a natureza, com seu arco e sua prata.
         
-        🏆 *FINAL REFLEXIVO*: João voltou para suas origens,
-        E viveu em paz, com a simplicidade das coisas!"
+        🏆 *FINAL DO GUERREIRO DA MATA*: João virou protetor da floresta,
+        E sua lenda é cantada em cada festa!"
                     `;
                     break;
                 default:
                     return;
             }
 
-            displayCordel(text, true);
+            displayCordel(texto, true, 'Litoral → ' + acao.charAt(0).toUpperCase() + acao.slice(1));
         }
 
-        // ===== INICIALIZAÇÃO =====
-        window.onload = startStory;
+        // ============================================================
+        // INICIALIZAÇÃO
+        // ============================================================
+        window.onload = iniciarHistoria;
     </script>
 </body>
 </html>
