@@ -8,209 +8,175 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
 
-        body {
-            font-family: 'Special Elite', cursive;
-            background: #2c1810;
-            background-image: 
-                radial-gradient(ellipse at 20% 50%, #4a2a1a 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 50%, #4a2a1a 0%, transparent 60%),
-                linear-gradient(180deg, #1a0f0a 0%, #2c1810 100%);
-            min-height: 100vh;
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        /* Moldura de xilogravura */
+        body {
+            font-family: 'Special Elite', cursive;
+            background: #1a0f0a;
+            background-image: 
+                radial-gradient(ellipse at 20% 50%, #3d251a 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, #3d251a 0%, transparent 60%),
+                linear-gradient(180deg, #1a0f0a 0%, #2c1810 50%, #1a0f0a 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Moldura principal com efeito de xilogravura */
         .cordel-box {
             background: #f5e6c8;
             background-image: 
-                linear-gradient(0deg, rgba(245, 230, 200, 0.9) 0%, rgba(255, 248, 225, 0.95) 100%);
-            border: 8px solid #5c3d2e;
+                linear-gradient(180deg, #faf0dc 0%, #f5e6c8 50%, #ede0c8 100%);
+            border: 12px solid #5c3d2e;
             border-image: repeating-linear-gradient(
                 45deg,
                 #5c3d2e 0px,
-                #5c3d2e 10px,
-                #7a5240 10px,
-                #7a5240 20px
-            ) 8;
+                #5c3d2e 8px,
+                #7a5240 8px,
+                #7a5240 16px
+            ) 12;
             box-shadow: 
-                15px 15px 0 0 rgba(44, 24, 16, 0.6),
-                inset 0 0 30px rgba(92, 61, 46, 0.2);
-            border-radius: 4px;
-            max-width: 900px;
+                20px 20px 0 0 rgba(44, 24, 16, 0.7),
+                inset 0 0 60px rgba(92, 61, 46, 0.15);
+            border-radius: 2px;
+            max-width: 920px;
+            width: 100%;
             position: relative;
-            padding: 30px 40px;
+            padding: 35px 45px;
+            margin: 20px auto;
         }
 
-        /* Efeito de papel envelhecido com textura */
+        /* Textura de papel envelhecido */
         .cordel-box::before {
             content: '';
             position: absolute;
-            top: 10px;
-            left: 10px;
-            right: 10px;
-            bottom: 10px;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
             background: 
                 repeating-linear-gradient(
                     0deg,
                     transparent,
-                    transparent 2px,
-                    rgba(139, 90, 43, 0.03) 2px,
-                    rgba(139, 90, 43, 0.03) 4px
+                    transparent 3px,
+                    rgba(139, 90, 43, 0.04) 3px,
+                    rgba(139, 90, 43, 0.04) 6px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 3px,
+                    rgba(139, 90, 43, 0.02) 3px,
+                    rgba(139, 90, 43, 0.02) 6px
                 );
             pointer-events: none;
-            border-radius: 2px;
+            border-radius: 1px;
         }
 
-        /* Decoração de cordel (barbante) */
+        /* Barbante decorativo */
         .cordel-box::after {
             content: '';
             position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
+            top: -8px;
+            left: 10%;
+            right: 10%;
             height: 4px;
             background: repeating-linear-gradient(
                 90deg,
                 #8B7355 0px,
-                #8B7355 8px,
-                transparent 8px,
-                transparent 16px
+                #8B7355 10px,
+                transparent 10px,
+                transparent 20px
             );
             border-radius: 2px;
+            opacity: 0.6;
         }
 
+        /* Título principal */
         .cordel-title {
             font-family: 'Special Elite', cursive;
             color: #2c1810;
             text-shadow: 
-                2px 2px 0 rgba(139, 90, 43, 0.3),
-                4px 4px 0 rgba(139, 90, 43, 0.1);
-            letter-spacing: 2px;
+                3px 3px 0 rgba(139, 90, 43, 0.3),
+                5px 5px 0 rgba(139, 90, 43, 0.1);
+            letter-spacing: 3px;
             border-bottom: 3px double #8B7355;
-            padding-bottom: 15px;
+            padding-bottom: 18px;
+            position: relative;
         }
 
+        .cordel-title::before {
+            content: '✦';
+            position: absolute;
+            left: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8B7355;
+            font-size: 1.5rem;
+            opacity: 0.4;
+        }
+
+        .cordel-title::after {
+            content: '✦';
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8B7355;
+            font-size: 1.5rem;
+            opacity: 0.4;
+        }
+
+        /* Área de texto do cordel */
         .cordel-text {
             font-family: 'Special Elite', cursive;
             color: #2c1810;
-            line-height: 2.2;
+            line-height: 2.4;
             font-size: 1.2rem;
             white-space: pre-wrap;
-            padding: 20px 10px;
-            background: rgba(255, 248, 225, 0.5);
+            padding: 25px 20px;
+            background: rgba(255, 248, 235, 0.6);
             border-left: 4px solid #8B7355;
             border-right: 4px solid #8B7355;
             border-radius: 8px;
             position: relative;
-            min-height: 200px;
+            min-height: 220px;
+            margin: 20px 0;
+            box-shadow: inset 0 0 30px rgba(139, 90, 43, 0.05);
         }
 
-        /* Efeito de texto impresso */
         .cordel-text::before {
             content: '❧';
             position: absolute;
-            top: -10px;
-            left: 10px;
-            font-size: 1.5rem;
+            top: -12px;
+            left: 15px;
+            font-size: 1.8rem;
             color: #8B7355;
-            opacity: 0.5;
+            opacity: 0.4;
+            background: #f5e6c8;
+            padding: 0 8px;
         }
 
         .cordel-text::after {
             content: '❧';
             position: absolute;
-            bottom: -10px;
-            right: 10px;
-            font-size: 1.5rem;
+            bottom: -12px;
+            right: 15px;
+            font-size: 1.8rem;
             color: #8B7355;
-            opacity: 0.5;
+            opacity: 0.4;
             transform: rotate(180deg);
-        }
-
-        .action-button {
-            font-family: 'Special Elite', cursive;
-            background: #5c3d2e;
-            color: #f5e6c8;
-            border: 3px solid #3d251a;
-            padding: 12px 24px;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-            text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
-            box-shadow: 
-                4px 4px 0 0 #3d251a,
-                inset 0 -4px 0 0 #3d251a;
-            position: relative;
-            font-size: 1.1rem;
-            letter-spacing: 0.5px;
-        }
-
-        .action-button:hover {
-            transform: translate(2px, 2px);
-            box-shadow: 
-                2px 2px 0 0 #3d251a,
-                inset 0 -4px 0 0 #3d251a;
-            background: #7a5240;
-        }
-
-        .action-button:active {
-            transform: translate(4px, 4px);
-            box-shadow: 0px 0px 0 0 #3d251a;
-        }
-
-        .action-button.secondary {
-            background: #8B7355;
-            border-color: #5c3d2e;
-            box-shadow: 
-                4px 4px 0 0 #5c3d2e,
-                inset 0 -4px 0 0 #5c3d2e;
-        }
-
-        .action-button.secondary:hover {
-            background: #a08464;
-        }
-
-        /* Spinner estilizado */
-        .loader {
-            border: 4px solid #f5e6c8;
-            border-top: 4px solid #5c3d2e;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            box-shadow: 0 0 10px rgba(92, 61, 46, 0.3);
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Estilo para xilogravura decorativa */
-        .xilogravura {
-            font-size: 2rem;
-            color: #5c3d2e;
-            opacity: 0.3;
-            letter-spacing: 10px;
-            user-select: none;
-        }
-
-        /* Estilo do player de áudio */
-        .cordel-audio {
             background: #f5e6c8;
-            border: 2px solid #5c3d2e;
-            border-radius: 4px;
-            padding: 8px;
-            width: 100%;
-            margin-top: 20px;
+            padding: 0 8px;
         }
 
-        .cordel-audio::-webkit-media-controls-panel {
-            background: #f5e6c8;
-        }
-
-        /* Efeito de digitando */
+        /* Efeito de digitação */
         @keyframes cursor-blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
@@ -222,93 +188,263 @@
             color: #5c3d2e;
         }
 
+        /* Botões estilo xilogravura */
+        .action-button {
+            font-family: 'Special Elite', cursive;
+            background: #5c3d2e;
+            color: #f5e6c8;
+            border: 3px solid #3d251a;
+            padding: 14px 28px;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+            box-shadow: 
+                5px 5px 0 0 #3d251a,
+                inset 0 -4px 0 0 #3d251a;
+            position: relative;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            width: 100%;
+            cursor: pointer;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .action-button:hover:not(:disabled) {
+            transform: translate(2px, 2px);
+            box-shadow: 
+                3px 3px 0 0 #3d251a,
+                inset 0 -4px 0 0 #3d251a;
+            background: #7a5240;
+        }
+
+        .action-button:active:not(:disabled) {
+            transform: translate(4px, 4px);
+            box-shadow: 
+                1px 1px 0 0 #3d251a,
+                inset 0 -4px 0 0 #3d251a;
+        }
+
+        .action-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: translate(2px, 2px);
+            box-shadow: 3px 3px 0 0 #3d251a;
+        }
+
+        .action-button.secondary {
+            background: #8B7355;
+            border-color: #5c3d2e;
+            box-shadow: 
+                5px 5px 0 0 #5c3d2e,
+                inset 0 -4px 0 0 #5c3d2e;
+        }
+
+        .action-button.secondary:hover:not(:disabled) {
+            background: #a08464;
+        }
+
+        /* Spinner estilizado */
+        .loader {
+            border: 4px solid #f5e6c8;
+            border-top: 4px solid #5c3d2e;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            animation: spin 0.8s linear infinite;
+            box-shadow: 0 0 20px rgba(92, 61, 46, 0.2);
+            flex-shrink: 0;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Xilogravura decorativa */
+        .xilogravura {
+            font-size: 2.2rem;
+            color: #5c3d2e;
+            opacity: 0.25;
+            letter-spacing: 12px;
+            user-select: none;
+            font-family: 'Special Elite', cursive;
+        }
+
+        /* Player de áudio estilizado */
+        .cordel-audio {
+            background: #f5e6c8;
+            border: 2px solid #5c3d2e;
+            border-radius: 4px;
+            padding: 10px;
+            width: 100%;
+            margin-top: 20px;
+            box-shadow: inset 0 2px 8px rgba(92, 61, 46, 0.1);
+        }
+
+        .cordel-audio::-webkit-media-controls-panel {
+            background: #f5e6c8;
+        }
+
+        .cordel-audio::-webkit-media-controls-play-button {
+            background: #5c3d2e;
+            border-radius: 50%;
+            color: #f5e6c8;
+        }
+
+        /* Indicador de carregamento */
+        #loading-indicator {
+            background: rgba(245, 230, 200, 0.9);
+            padding: 15px 25px;
+            border-radius: 8px;
+            border: 2px solid #8B7355;
+            box-shadow: 4px 4px 0 0 rgba(92, 61, 46, 0.2);
+        }
+
+        #loading-indicator span {
+            color: #2c1810;
+            font-size: 1.1rem;
+        }
+
         /* Responsividade */
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
             .cordel-box {
-                padding: 20px 15px;
+                padding: 20px 18px;
+                border-width: 8px;
             }
+            
             .cordel-text {
                 font-size: 1rem;
-                line-height: 1.8;
-                padding: 15px 8px;
+                line-height: 2;
+                padding: 18px 12px;
+                min-height: 160px;
             }
+            
             .action-button {
                 font-size: 0.95rem;
-                padding: 10px 16px;
+                padding: 12px 18px;
             }
+            
+            .cordel-title {
+                font-size: 2rem !important;
+            }
+            
+            .cordel-title::before,
+            .cordel-title::after {
+                display: none;
+            }
+            
+            .xilogravura {
+                font-size: 1.5rem;
+                letter-spacing: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cordel-box {
+                padding: 15px 12px;
+            }
+            
+            .cordel-text {
+                font-size: 0.9rem;
+                line-height: 1.8;
+                padding: 12px 8px;
+                min-height: 120px;
+            }
+            
+            .action-button {
+                font-size: 0.85rem;
+                padding: 10px 14px;
+                box-shadow: 3px 3px 0 0 #3d251a;
+            }
+        }
+
+        /* Animações */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
         }
     </style>
 </head>
 <body>
-    <div class="flex items-start justify-center min-h-screen py-8">
-        <div class="cordel-box w-full">
-            <!-- Cabeçalho com xilogravura -->
-            <div class="text-center mb-6">
-                <div class="xilogravura">✦ ✦ ✦</div>
-                <h1 class="cordel-title text-4xl md:text-5xl font-bold text-red-900">
-                    O Cordel Interativo
-                </h1>
-                <p class="text-lg text-amber-900/80 mt-2 italic">
-                    Zé Violeiro convida: escute, leia e decida o destino!
-                </p>
-                <div class="xilogravura mt-2">✦ ✦ ✦</div>
+    <div class="cordel-box">
+        <!-- Cabeçalho -->
+        <div class="text-center mb-6">
+            <div class="xilogravura">✦ ✦ ✦</div>
+            <h1 class="cordel-title text-4xl md:text-5xl font-bold text-red-900 mt-2">
+                O Cordel Interativo
+            </h1>
+            <p class="text-lg text-amber-900/80 mt-3 italic">
+                Zé Violeiro convida: escute, leia e decida o destino!
+            </p>
+            <div class="xilogravura mt-2">✦ ✦ ✦</div>
+        </div>
+
+        <!-- Área de texto -->
+        <div id="text-display" class="cordel-text">
+            <!-- Injetado pelo JavaScript -->
+        </div>
+
+        <!-- Área de interação -->
+        <div id="interaction-area" class="flex flex-col items-center space-y-4">
+            
+            <!-- Loading -->
+            <div id="loading-indicator" class="hidden items-center justify-center space-x-4">
+                <div class="loader"></div>
+                <span>Zé Violeiro está afinando a viola...</span>
             </div>
 
-            <!-- Área de Exibição do Texto -->
-            <div id="text-display" class="cordel-text mb-8">
-                <!-- Texto inserido pelo JavaScript -->
+            <!-- Opções -->
+            <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                <!-- Injetado pelo JavaScript -->
             </div>
+            
+            <!-- Reiniciar -->
+            <button id="restart-button" class="hidden action-button secondary mt-4">
+                ↺ Começar Outra História!
+            </button>
+        </div>
 
-            <!-- Área de Interação -->
-            <div id="interaction-area" class="flex flex-col items-center space-y-4">
-                
-                <!-- Indicador de Carregamento -->
-                <div id="loading-indicator" class="hidden flex items-center justify-center space-x-3 text-amber-900">
-                    <div class="loader"></div>
-                    <span class="text-lg">Zé Violeiro está afinando a viola...</span>
-                </div>
+        <!-- Áudio -->
+        <audio id="cordel-audio" controls class="cordel-audio hidden"></audio>
 
-                <!-- Botões de Opções -->
-                <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                    <!-- Injetado pelo JavaScript -->
-                </div>
-                
-                <!-- Botão de Recomeço -->
-                <button id="restart-button" onclick="startStory()" class="hidden mt-6 action-button secondary">
-                    ↺ Começar Outra História!
-                </button>
-            </div>
-
-            <!-- Player de Áudio -->
-            <audio id="cordel-audio" controls class="cordel-audio hidden"></audio>
-
-            <!-- Rodapé -->
-            <div class="mt-8 pt-4 border-t-2 border-amber-800/30 text-center">
-                <p class="text-sm text-amber-900/70">
-                    <span class="font-bold">Zé Violeiro:</span> Alto, magro, e com seu inseparável chapéu de palha.
-                </p>
-                <div class="xilogravura mt-1 text-xs">✧ ✧ ✧</div>
-            </div>
+        <!-- Rodapé -->
+        <div class="mt-8 pt-4 border-t-2 border-amber-800/30 text-center">
+            <p class="text-sm text-amber-900/70">
+                <span class="font-bold">Zé Violeiro:</span> Alto, magro, e com seu inseparável chapéu de palha.
+            </p>
+            <div class="xilogravura mt-1 text-xs">✧ ✧ ✧</div>
         </div>
     </div>
 
     <script type="module">
+        // ============================================================
+        // IMPORTAÇÕES E CONFIGURAÇÕES
+        // ============================================================
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         
         const apiKey = "";
         const TTS_MODEL = "gemini-2.5-flash-preview-tts";
         const TTS_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${TTS_MODEL}:generateContent?key=${apiKey}`;
 
+        // ============================================================
+        // DOM ELEMENTOS
+        // ============================================================
         const textDisplay = document.getElementById('text-display');
         const optionsContainer = document.getElementById('options-container');
         const loadingIndicator = document.getElementById('loading-indicator');
         const restartButton = document.getElementById('restart-button');
         const cordelAudio = document.getElementById('cordel-audio');
 
-        let storyState = 0;
         let isProcessing = false;
 
-        // --- UTILIDADES DE ÁUDIO ---
+        // ============================================================
+        // UTILIDADES DE ÁUDIO
+        // ============================================================
         const base64ToArrayBuffer = (base64) => {
             const binaryString = atob(base64);
             const bytes = new Uint8Array(binaryString.length);
@@ -359,9 +495,12 @@
             return new Blob([buffer], { type: 'audio/wav' });
         };
 
-        // --- TTS ---
+        // ============================================================
+        // TTS (TEXT-TO-SPEECH)
+        // ============================================================
         async function fetchTTS(prompt, maxRetries = 3, delay = 1000) {
-            const fullPrompt = `Diga em português do Brasil com um sotaque nordestino forte, em um tom alegre e de contador de histórias, com entonação dramática e pausas expressivas: "${prompt}"`;
+            const fullPrompt = `Diga em português do Brasil com um sotaque nordestino forte, 
+            em um tom alegre e de contador de histórias, com entonação dramática e pausas expressivas: "${prompt}"`;
 
             const payload = {
                 contents: [{ parts: [{ text: fullPrompt }] }],
@@ -412,18 +551,27 @@
             return null;
         }
 
-        // --- EXIBIÇÃO ---
+        // ============================================================
+        // EXIBIÇÃO DO CORDEL
+        // ============================================================
         async function displayCordel(text, promptForTTS, showRestart = false) {
             if (isProcessing) return;
             isProcessing = true;
 
+            // Aplica animação fade-in
+            textDisplay.classList.remove('fade-in');
             textDisplay.innerHTML = text;
             optionsContainer.innerHTML = '';
             restartButton.classList.add('hidden');
             loadingIndicator.classList.remove('hidden');
+            loadingIndicator.style.display = 'flex';
             cordelAudio.classList.add('hidden');
             cordelAudio.pause();
             cordelAudio.src = '';
+            
+            // Força reflow para reiniciar animação
+            void textDisplay.offsetWidth;
+            textDisplay.classList.add('fade-in');
 
             try {
                 const audioUrl = await fetchTTS(promptForTTS);
@@ -431,7 +579,6 @@
                     cordelAudio.src = audioUrl;
                     cordelAudio.classList.remove('hidden');
                     
-                    // Adiciona evento de fim para mostrar restart
                     if (showRestart) {
                         cordelAudio.addEventListener('ended', () => {
                             restartButton.classList.remove('hidden');
@@ -442,9 +589,11 @@
                 }
             } catch (error) {
                 console.error("Erro TTS:", error);
-                textDisplay.innerHTML += `<p class="text-red-800 mt-4 font-bold">⚠️ Erro ao carregar o áudio. Tente novamente.</p>`;
+                textDisplay.innerHTML += `
+                    <p class="text-red-800 mt-4 font-bold">⚠️ Erro ao carregar o áudio. Tente novamente.</p>
+                `;
             } finally {
-                loadingIndicator.classList.add('hidden');
+                loadingIndicator.style.display = 'none';
                 if (!showRestart) {
                     restartButton.classList.add('hidden');
                 }
@@ -452,15 +601,18 @@
             }
         }
 
-        // --- RENDERIZAÇÃO DE OPÇÕES ---
+        // ============================================================
+        // RENDERIZAÇÃO DE OPÇÕES
+        // ============================================================
         function renderOptions(options) {
             optionsContainer.innerHTML = '';
             restartButton.classList.add('hidden');
             
-            options.forEach(option => {
+            options.forEach((option, index) => {
                 const button = document.createElement('button');
                 button.innerHTML = option.text;
-                button.className = 'action-button w-full';
+                button.className = 'action-button fade-in';
+                button.style.animationDelay = `${index * 0.1}s`;
                 button.onclick = () => {
                     if (isProcessing) return;
                     Array.from(optionsContainer.querySelectorAll('button')).forEach(btn => btn.disabled = true);
@@ -470,25 +622,27 @@
             });
         }
 
-        // --- HISTÓRIA ---
+        // ============================================================
+        // LÓGICA DA HISTÓRIA
+        // ============================================================
         
         // 1. INÍCIO
         window.startStory = function() {
             if (isProcessing) return;
             
             const text = `
-                "Sou eu, Zé Violeiro, cheguei pra prosear,
-                Pego a viola, afinada, pra a história começar.
-                Esse é o Cordel de João, cabra forte e destemido,
-                Que vai enfrentar o mundo sem nunca ter tido medo.
+        "Sou eu, Zé Violeiro, cheguei pra prosear,
+        Pego a viola, afinada, pra a história começar.
+        Esse é o Cordel de João, cabra forte e destemido,
+        Que vai enfrentar o mundo sem nunca ter tido medo.
 
-                Alto, magro, de chapéu, um matuto viajante,
-                João procura a sorte, faz-se um cacto errante.
-                Mas todo herói da vida tem que ter um começo,
-                Um lugar pra dar o passo, pra sair do seu recesso.
-                
-                Diga cá, meu companheiro, onde a história vai brotar?
-                No campo seco e rachado ou no rio a beira-mar?"
+        Alto, magro, de chapéu, um matuto viajante,
+        João procura a sorte, faz-se um cacto errante.
+        Mas todo herói da vida tem que ter um começo,
+        Um lugar pra dar o passo, pra sair do seu recesso.
+        
+        Diga cá, meu companheiro, onde a história vai brotar?
+        No campo seco e rachado ou no rio a beira-mar?"
             `;
             
             const promptForTTS = `Sou eu, Zé Violeiro, cheguei pra prosear. Pego a viola, afinada, pra a história começar. Esse é o Cordel de João, cabra forte e destemido, que vai enfrentar o mundo sem nunca ter tido medo. Alto, magro, de chapéu, um matuto viajante, João procura a sorte, faz-se um cacto errante. Mas todo herói da vida tem que ter um começo, um lugar pra dar o passo, pra sair do seu recesso. Diga cá, meu companheiro, onde a história vai brotar? No campo seco e rachado ou no rio a beira-mar?`;
@@ -510,18 +664,18 @@
 
             if (setting === 'sertao') {
                 text = `
-                    "O Sertão foi escolhido, lugar de sol de rachar,
-                    João caminha na caieira, sem poder água encontrar.
-                    Quando o sol batia forte, na areia que fervia,
-                    Nosso herói viu algo estranho que o caminho lhe trazia.
+        "O Sertão foi escolhido, lugar de sol de rachar,
+        João caminha na caieira, sem poder água encontrar.
+        Quando o sol batia forte, na areia que fervia,
+        Nosso herói viu algo estranho que o caminho lhe trazia.
 
-                    Um clarão lá na vereda, um mistério a reluzir,
-                    João sabia: era perigo, mas resolveu prosseguir.
-                    Era o BANDO DE LAMPIÃO, com rifles e com facão,
-                    Querendo fazer assalto pra tocar o terror no chão!
-                    
-                    E agora, o que faz João? Diante da dura afronta?
-                    Vai pro mato ou saca a arma? O que a sua alma conta?"
+        Um clarão lá na vereda, um mistério a reluzir,
+        João sabia: era perigo, mas resolveu prosseguir.
+        Era o BANDO DE LAMPIÃO, com rifles e com facão,
+        Querendo fazer assalto pra tocar o terror no chão!
+        
+        E agora, o que faz João? Diante da dura afronta?
+        Vai pro mato ou saca a arma? O que a sua alma conta?"
                 `;
                 promptForTTS = `O Sertão foi escolhido, lugar de sol de rachar. João caminha na caieira, sem poder água encontrar. Quando o sol batia forte, na areia que fervia, nosso herói viu algo estranho que o caminho lhe trazia. Um clarão lá na vereda, um mistério a reluzir, João sabia: era perigo, mas resolveu prosseguir. Era o BANDO DE LAMPIÃO, com rifles e com facão, querendo fazer assalto pra tocar o terror no chão! E agora, o que faz João? Diante da dura afronta? Vai pro mato ou saca a arma? O que a sua alma conta?`;
                 options = [
@@ -530,18 +684,18 @@
                 ];
             } else {
                 text = `
-                    "Na Caatinga, o cenário de espinho e juazeiro,
-                    João seguia sua trilha, como um cabra verdadeiro.
-                    Ele busca um Mandacaru, pra beber água e viver,
-                    Quando um UIVO de assombro faz seu corpo estremecer.
+        "Na Caatinga, o cenário de espinho e juazeiro,
+        João seguia sua trilha, como um cabra verdadeiro.
+        Ele busca um Mandacaru, pra beber água e viver,
+        Quando um UIVO de assombro faz seu corpo estremecer.
 
-                    Na sombra de um Xique-Xique, surgiu a *Assombração*,
-                    Um vulto branco e gigante, a BIXA-SETE-CABEÇAS do sertão.
-                    O medo cortou o vento, paralisando o valente,
-                    Pois lutar com o invisível não é coisa pra toda gente.
-                    
-                    E agora, o que faz João? Diante da dura afronta?
-                    Vai pro mato ou saca a arma? O que a sua alma conta?"
+        Na sombra de um Xique-Xique, surgiu a *Assombração*,
+        Um vulto branco e gigante, a BIXA-SETE-CABEÇAS do sertão.
+        O medo cortou o vento, paralisando o valente,
+        Pois lutar com o invisível não é coisa pra toda gente.
+        
+        E agora, o que faz João? Diante da dura afronta?
+        Vai pro mato ou saca a arma? O que a sua alma conta?"
                 `;
                 promptForTTS = `Na Caatinga, o cenário de espinho e juazeiro. João seguia sua trilha, como um cabra verdadeiro. Ele busca um Mandacaru, pra beber água e viver, quando um uivo de assombro faz seu corpo estremecer. Na sombra de um Xique-Xique, surgiu a Assombração, um vulto branco e gigante, a BIXA-SETE-CABEÇAS do sertão. O medo cortou o vento, paralisando o valente, pois lutar com o invisível não é coisa pra toda gente. E agora, o que faz João? Diante da dura afronta? Vai pro mato ou saca a arma? O que a sua alma conta?`;
                 options = [
@@ -562,55 +716,55 @@
             switch (action) {
                 case 'esconder':
                     text = `
-                        "João se escondeu na moita, feito bicho-do-mato,
-                        Esperou o bando passar, evitando o desbarato.
-                        Ele viu rifle e facão, percebeu que era perdido,
-                        E a *Esperteza* de João evitou ser ferido.
+        "João se escondeu na moita, feito bicho-do-mato,
+        Esperou o bando passar, evitando o desbarato.
+        Ele viu rifle e facão, percebeu que era perdido,
+        E a *Esperteza* de João evitou ser ferido.
 
-                        Quando a poeira baixou, ele seguiu seu destino,
-                        Agora mais cauteloso, um cabra forte e fino.
-                        
-                        João viveu e aprendeu, e sua vida é *longa e cheia* de paz.
-                        Um final pra um herói que pensa, e não só o que faz!"
+        Quando a poeira baixou, ele seguiu seu destino,
+        Agora mais cauteloso, um cabra forte e fino.
+        
+        João viveu e aprendeu, e sua vida é *longa e cheia* de paz.
+        Um final pra um herói que pensa, e não só o que faz!"
                     `;
                     promptForTTS = `João se escondeu na moita, feito bicho-do-mato. Esperou o bando passar, evitando o desbarato. Ele viu rifle e facão, percebeu que era perdido, e a esperteza de João evitou ser ferido. Quando a poeira baixou, ele seguiu seu destino, agora mais cauteloso, um cabra forte e fino. João viveu e aprendeu, e sua vida é longa e cheia de paz. Um final pra um herói que pensa, e não só o que faz!`;
                     break;
                 case 'atirar':
                     text = `
-                        "João gritou e atirou sua pedra, num ato de coragem,
-                        Os bandidos riram alto, e não deram nem passagem.
-                        Por ser só um contra um bando, o final foi de lamento,
-                        A *Impulsividade* custou-lhe caro, findando o seu momento.
-                        
-                        O cordel termina aqui, não há mais pra onde ir.
-                        O destino de João é *triste e breve*, pois ousou sem medir!"
+        "João gritou e atirou sua pedra, num ato de coragem,
+        Os bandidos riram alto, e não deram nem passagem.
+        Por ser só um contra um bando, o final foi de lamento,
+        A *Impulsividade* custou-lhe caro, findando o seu momento.
+        
+        O cordel termina aqui, não há mais pra onde ir.
+        O destino de João é *triste e breve*, pois ousou sem medir!"
                     `;
                     promptForTTS = `João gritou e atirou sua pedra, num ato de coragem. Os bandidos riram alto, e não deram nem passagem. Por ser só um contra um bando, o final foi de lamento. A Impulsividade custou-lhe caro, findando o seu momento. O cordel termina aqui, não há mais pra onde ir. O destino de João é triste e breve, pois ousou sem medir!`;
                     break;
                 case 'lutar':
                     text = `
-                        "João sacou o seu facão e investiu contra o vulto,
-                        Fez a fé e não temeu, não se dobrou ao insulto!
-                        Mas a Bicha-Sete-Cabeças é feita de puro vento,
-                        O facão não pegou em nada, e João sofreu o tormento.
+        "João sacou o seu facão e investiu contra o vulto,
+        Fez a fé e não temeu, não se dobrou ao insulto!
+        Mas a Bicha-Sete-Cabeças é feita de puro vento,
+        O facão não pegou em nada, e João sofreu o tormento.
 
-                        O monstro o abraçou forte, sugando-lhe a energia.
-                        A *Teimosia* de João foi sua agonia.
-                        
-                        O cordel termina aqui, com o herói definhando.
-                        O destino de João é *triste e breve*, no sertão se acabando!"
+        O monstro o abraçou forte, sugando-lhe a energia.
+        A *Teimosia* de João foi sua agonia.
+        
+        O cordel termina aqui, com o herói definhando.
+        O destino de João é *triste e breve*, no sertão se acabando!"
                     `;
                     promptForTTS = `João sacou o seu facão e investiu contra o vulto. Fez a fé e não temeu, não se dobrou ao insulto! Mas a Bicha-Sete-Cabeças é feita de puro vento, o facão não pegou em nada, e João sofreu o tormento. O monstro o abraçou forte, sugando-lhe a energia. A Teimosia de João foi sua agonia. O cordel termina aqui, com o herói definhando. O destino de João é triste e breve, no sertão se acabando!`;
                     break;
                 case 'correr':
                     text = `
-                        "João correu pelo mato, mais veloz que um raio,
-                        A Bicha-Sete-Cabeças não podia segui-lo em maio.
-                        Ele usou a sua *Malícia*, o instinto de sobrevivente,
-                        Deixou a assombração pra trás, e seguiu, contente.
-                        
-                        Ele escapou do perigo, viveu pra contar a história.
-                        E a vida de João é *longa e cheia* de paz e de glória!"
+        "João correu pelo mato, mais veloz que um raio,
+        A Bicha-Sete-Cabeças não podia segui-lo em maio.
+        Ele usou a sua *Malícia*, o instinto de sobrevivente,
+        Deixou a assombração pra trás, e seguiu, contente.
+        
+        Ele escapou do perigo, viveu pra contar a história.
+        E a vida de João é *longa e cheia* de paz e de glória!"
                     `;
                     promptForTTS = `João correu pelo mato, mais veloz que um raio. A Bicha-Sete-Cabeças não podia segui-lo em maio. Ele usou a sua malícia, o instinto de sobrevivente, deixou a assombração pra trás, e seguiu, contente. Ele escapou do perigo, viveu pra contar a história. E a vida de João é longa e cheia de paz e de glória!`;
                     break;
@@ -621,7 +775,9 @@
             displayCordel(text, promptForTTS, true);
         }
 
-        // --- INICIAR ---
+        // ============================================================
+        // INICIALIZAÇÃO
+        // ============================================================
         window.onload = startStory;
     </script>
 </body>
