@@ -8,12 +8,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
             font-family: 'Special Elite', cursive;
             background: #1a0f0a;
@@ -26,23 +20,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 0;
         }
 
         .cordel-box {
             background: #f5e6c8;
-            background-image: 
-                linear-gradient(180deg, #faf0dc 0%, #f5e6c8 50%, #ede0c8 100%);
+            background-image: linear-gradient(180deg, #faf0dc 0%, #f5e6c8 50%, #ede0c8 100%);
             border: 12px solid #5c3d2e;
-            border-image: repeating-linear-gradient(
-                45deg,
-                #5c3d2e 0px,
-                #5c3d2e 8px,
-                #7a5240 8px,
-                #7a5240 16px
-            ) 12;
-            box-shadow: 
-                20px 20px 0 0 rgba(44, 24, 16, 0.7),
-                inset 0 0 60px rgba(92, 61, 46, 0.15);
+            border-image: repeating-linear-gradient(45deg, #5c3d2e 0px, #5c3d2e 8px, #7a5240 8px, #7a5240 16px) 12;
+            box-shadow: 20px 20px 0 0 rgba(44, 24, 16, 0.7), inset 0 0 60px rgba(92, 61, 46, 0.15);
             border-radius: 2px;
             max-width: 920px;
             width: 100%;
@@ -59,20 +45,8 @@
             right: 15px;
             bottom: 15px;
             background: 
-                repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 3px,
-                    rgba(139, 90, 43, 0.04) 3px,
-                    rgba(139, 90, 43, 0.04) 6px
-                ),
-                repeating-linear-gradient(
-                    90deg,
-                    transparent,
-                    transparent 3px,
-                    rgba(139, 90, 43, 0.02) 3px,
-                    rgba(139, 90, 43, 0.02) 6px
-                );
+                repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(139, 90, 43, 0.04) 3px, rgba(139, 90, 43, 0.04) 6px),
+                repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(139, 90, 43, 0.02) 3px, rgba(139, 90, 43, 0.02) 6px);
             pointer-events: none;
             border-radius: 1px;
         }
@@ -84,13 +58,7 @@
             left: 10%;
             right: 10%;
             height: 4px;
-            background: repeating-linear-gradient(
-                90deg,
-                #8B7355 0px,
-                #8B7355 10px,
-                transparent 10px,
-                transparent 20px
-            );
+            background: repeating-linear-gradient(90deg, #8B7355 0px, #8B7355 10px, transparent 10px, transparent 20px);
             border-radius: 2px;
             opacity: 0.6;
         }
@@ -98,9 +66,7 @@
         .cordel-title {
             font-family: 'Special Elite', cursive;
             color: #2c1810;
-            text-shadow: 
-                3px 3px 0 rgba(139, 90, 43, 0.3),
-                5px 5px 0 rgba(139, 90, 43, 0.1);
+            text-shadow: 3px 3px 0 rgba(139, 90, 43, 0.3), 5px 5px 0 rgba(139, 90, 43, 0.1);
             letter-spacing: 3px;
             border-bottom: 3px double #8B7355;
             padding-bottom: 18px;
@@ -187,10 +153,7 @@
             border-radius: 4px;
             transition: all 0.15s ease;
             text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
-            box-shadow: 
-                5px 5px 0 0 #3d251a,
-                inset 0 -4px 0 0 #3d251a;
-            position: relative;
+            box-shadow: 5px 5px 0 0 #3d251a, inset 0 -4px 0 0 #3d251a;
             font-size: 1.1rem;
             letter-spacing: 0.5px;
             width: 100%;
@@ -201,17 +164,13 @@
 
         .action-button:hover:not(:disabled) {
             transform: translate(2px, 2px);
-            box-shadow: 
-                3px 3px 0 0 #3d251a,
-                inset 0 -4px 0 0 #3d251a;
+            box-shadow: 3px 3px 0 0 #3d251a, inset 0 -4px 0 0 #3d251a;
             background: #7a5240;
         }
 
         .action-button:active:not(:disabled) {
             transform: translate(4px, 4px);
-            box-shadow: 
-                1px 1px 0 0 #3d251a,
-                inset 0 -4px 0 0 #3d251a;
+            box-shadow: 1px 1px 0 0 #3d251a, inset 0 -4px 0 0 #3d251a;
         }
 
         .action-button:disabled {
@@ -224,9 +183,7 @@
         .action-button.secondary {
             background: #8B7355;
             border-color: #5c3d2e;
-            box-shadow: 
-                5px 5px 0 0 #5c3d2e,
-                inset 0 -4px 0 0 #5c3d2e;
+            box-shadow: 5px 5px 0 0 #5c3d2e, inset 0 -4px 0 0 #5c3d2e;
         }
 
         .action-button.secondary:hover:not(:disabled) {
@@ -248,55 +205,18 @@
         }
 
         @media (max-width: 768px) {
-            .cordel-box {
-                padding: 20px 18px;
-                border-width: 8px;
-            }
-            
-            .cordel-text {
-                font-size: 1rem;
-                line-height: 2;
-                padding: 18px 12px;
-                min-height: 160px;
-            }
-            
-            .action-button {
-                font-size: 0.95rem;
-                padding: 12px 18px;
-            }
-            
-            .cordel-title {
-                font-size: 2rem !important;
-            }
-            
-            .cordel-title::before,
-            .cordel-title::after {
-                display: none;
-            }
-            
-            .xilogravura {
-                font-size: 1.5rem;
-                letter-spacing: 8px;
-            }
+            .cordel-box { padding: 20px 18px; border-width: 8px; }
+            .cordel-text { font-size: 1rem; line-height: 2; padding: 18px 12px; min-height: 160px; }
+            .action-button { font-size: 0.95rem; padding: 12px 18px; }
+            .cordel-title { font-size: 2rem !important; }
+            .cordel-title::before, .cordel-title::after { display: none; }
+            .xilogravura { font-size: 1.5rem; letter-spacing: 8px; }
         }
 
         @media (max-width: 480px) {
-            .cordel-box {
-                padding: 15px 12px;
-            }
-            
-            .cordel-text {
-                font-size: 0.9rem;
-                line-height: 1.8;
-                padding: 12px 8px;
-                min-height: 120px;
-            }
-            
-            .action-button {
-                font-size: 0.85rem;
-                padding: 10px 14px;
-                box-shadow: 3px 3px 0 0 #3d251a;
-            }
+            .cordel-box { padding: 15px 12px; }
+            .cordel-text { font-size: 0.9rem; line-height: 1.8; padding: 12px 8px; min-height: 120px; }
+            .action-button { font-size: 0.85rem; padding: 10px 14px; box-shadow: 3px 3px 0 0 #3d251a; }
         }
 
         @keyframes fadeIn {
@@ -340,25 +260,18 @@
     </div>
 
     <script>
-        // ============================================================
-        // DOM ELEMENTOS
-        // ============================================================
+        // ===== ELEMENTOS DOM =====
         const textDisplay = document.getElementById('text-display');
         const optionsContainer = document.getElementById('options-container');
         const restartButton = document.getElementById('restart-button');
-
         let isProcessing = false;
 
-        // ============================================================
-        // FUNÇÃO PARA SUBSTITUIR *texto* POR <strong>texto</strong>
-        // ============================================================
+        // ===== FUNÇÃO PARA NEGRITO =====
         function formatText(text) {
             return text.replace(/\*(.*?)\*/g, '<strong>$1</strong>');
         }
 
-        // ============================================================
-        // EXIBIÇÃO DO CORDEL
-        // ============================================================
+        // ===== EXIBIR TEXTO =====
         function displayCordel(text) {
             if (isProcessing) return;
             isProcessing = true;
@@ -371,14 +284,10 @@
             void textDisplay.offsetWidth;
             textDisplay.classList.add('fade-in');
 
-            setTimeout(() => {
-                isProcessing = false;
-            }, 100);
+            setTimeout(() => { isProcessing = false; }, 100);
         }
 
-        // ============================================================
-        // RENDERIZAÇÃO DE OPÇÕES
-        // ============================================================
+        // ===== RENDERIZAR BOTÕES =====
         function renderOptions(options) {
             optionsContainer.innerHTML = '';
             restartButton.classList.add('hidden');
@@ -397,11 +306,7 @@
             });
         }
 
-        // ============================================================
-        // LÓGICA DA HISTÓRIA - SEM ÁUDIO E COM NEGRITO
-        // ============================================================
-        
-        // 1. INÍCIO
+        // ===== HISTÓRIA =====
         window.startStory = function() {
             if (isProcessing) return;
             
@@ -430,7 +335,6 @@
             setTimeout(() => renderOptions(options), 100);
         };
 
-        // 2. CENÁRIO
         function chooseSetting(setting) {
             if (isProcessing) return;
             
@@ -480,7 +384,6 @@
             setTimeout(() => renderOptions(options), 100);
         }
 
-        // 3. AÇÃO (FINAL)
         function chooseAction(action) {
             if (isProcessing) return;
             
@@ -542,14 +445,9 @@
             }
 
             displayCordel(text);
-            setTimeout(() => {
-                restartButton.classList.remove('hidden');
-            }, 100);
+            setTimeout(() => { restartButton.classList.remove('hidden'); }, 100);
         }
 
-        // ============================================================
-        // INICIALIZAÇÃO
-        // ============================================================
         window.onload = startStory;
     </script>
 </body>
