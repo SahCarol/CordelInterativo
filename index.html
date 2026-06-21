@@ -94,7 +94,6 @@
             box-shadow: inset 0 0 30px rgba(139, 90, 43, 0.05);
         }
 
-        /* ESTILO CORRETO PARA O TEXTO - ALINHADO À ESQUERDA */
         .cordel-text p {
             margin: 0;
             padding: 0;
@@ -115,17 +114,17 @@
             background: #5c3d2e;
             color: #f5e6c8;
             border: 3px solid #3d251a;
-            padding: 14px 20px;
+            padding: 12px 16px;
             border-radius: 4px;
             transition: all 0.15s ease;
             text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
             box-shadow: 5px 5px 0 0 #3d251a, inset 0 -4px 0 0 #3d251a;
-            font-size: 1rem;
+            font-size: 0.95rem;
             letter-spacing: 0.5px;
             width: 100%;
             cursor: pointer;
             text-align: center;
-            line-height: 1.4;
+            line-height: 1.3;
         }
 
         .action-button:hover:not(:disabled) {
@@ -193,7 +192,7 @@
         @media (max-width: 768px) {
             .cordel-box { padding: 20px 18px; border-width: 8px; }
             .cordel-text { font-size: 0.95rem; line-height: 2; padding: 18px 12px; min-height: 150px; }
-            .action-button { font-size: 0.85rem; padding: 10px 14px; }
+            .action-button { font-size: 0.8rem; padding: 10px 12px; }
             .cordel-title { font-size: 2rem !important; }
             .xilogravura { font-size: 1.5rem; letter-spacing: 8px; }
         }
@@ -241,7 +240,10 @@
     </div>
 
     <script>
-        // ===== ELEMENTOS =====
+        // ============================================================
+        // SISTEMA DO CORDEL - VERSÃO COM MAIS OPÇÕES
+        // ============================================================
+        
         const textoEl = document.getElementById('texto');
         const botoesEl = document.getElementById('botoes');
         const reiniciarEl = document.getElementById('reiniciar');
@@ -249,31 +251,20 @@
         let processando = false;
         let historico = [];
 
-        // ===== NEGRITO =====
         function negrito(t) {
             return t.replace(/\*(.*?)\*/g, '<strong>$1</strong>');
         }
 
-        // ===== EXIBIR =====
         function exibir(texto, opcoes, final = false) {
             if (processando) return;
             processando = true;
 
             textoEl.classList.remove('fade-in');
             
-            // Remove espaços extras e quebras de linha no início/fim
             let textoLimpo = texto.trim();
-            
-            // Divide em linhas e remove espaços extras
             let linhas = textoLimpo.split('\n').map(linha => linha.trim());
-            
-            // Junta as linhas com quebra de linha, mas sem indentação extra
             let textoFormatado = linhas.join('\n');
-            
-            // Converte quebras de linha para <br> e mantém espaçamento
             textoFormatado = textoFormatado.replace(/\n/g, '<br>');
-            
-            // Adiciona negrito
             textoFormatado = negrito(textoFormatado);
             
             textoEl.innerHTML = textoFormatado;
@@ -307,16 +298,16 @@
             setTimeout(() => { processando = false; }, 100);
         }
 
-        // ===== ADICIONAR AO CAMINHO =====
         function addCaminho(passo) {
             historico.push(passo);
             caminhoEl.textContent = '📜 ' + historico.join(' → ');
         }
 
         // ============================================================
-        // HISTÓRIA
+        // HISTÓRIA COM 4 OPÇÕES EM CADA PASSO
         // ============================================================
 
+        // PASSO 1: INÍCIO (4 opções)
         function inicio() {
             historico = [];
             caminhoEl.textContent = '🌵 Nova jornada começa';
@@ -327,163 +318,337 @@
                 Ele partiu do sertão com seu facão na mão,
                 Em busca de aventura, em busca de emoção.
 
-                Três caminhos se abrem diante de João:
-                O *Sertão* seco, a *Caatinga* ou o *Litoral*.
+                Quatro caminhos se abrem diante de João:
+                O *Sertão* seco, a *Caatinga* espinhosa,
+                O *Litoral* azul ou a *Serra* fria e frondosa.
+
                 Escolha com cuidado, pois o destino é seu,
                 E a história de João será o que você quiser!"`,
                 [
                     { valor: 'sertao', texto: '🏜️ *Sertão* - Terra de sol e poeira', acao: passo2 },
                     { valor: 'caatinga', texto: '🌵 *Caatinga* - Mata de espinhos', acao: passo2 },
-                    { valor: 'litoral', texto: '🌊 *Litoral* - Praias e mar azul', acao: passo2 }
+                    { valor: 'litoral', texto: '🌊 *Litoral* - Praias e mar azul', acao: passo2 },
+                    { valor: 'serra', texto: '⛰️ *Serra* - Montanhas e neblina', acao: passo2 }
                 ]
             );
         }
 
+        // PASSO 2: CENÁRIOS (cada um com 4 opções)
         function passo2(valor) {
-            const nomes = { sertao: 'Sertão', caatinga: 'Caatinga', litoral: 'Litoral' };
+            const nomes = { 
+                sertao: 'Sertão', 
+                caatinga: 'Caatinga', 
+                litoral: 'Litoral',
+                serra: 'Serra'
+            };
             addCaminho(nomes[valor]);
 
             if (valor === 'sertao') {
                 exibir(
                     `"No *Sertão* o sol castiga, a terra é rachada,
                     João caminha cansado, a sede é chegada.
-                    Ele avista uma *caravana* ao longe,
-                    E também uma *gruta* escura, um grande horror.
-
-                    O que João faz? Qual caminho ele escolhe?
-                    A caravana ou a gruta misteriosa?"`,
+                    Quatro caminhos surgem diante de João:
+                    Uma *caravana*, uma *gruta*, um *oásis* e um *viajante*.`,
                     [
-                        { valor: 'caravana', texto: '🐪 Seguir a *caravana*', acao: passo3Sertao },
-                        { valor: 'gruta', texto: '🕯️ Entrar na *gruta*', acao: passo3Sertao }
+                        { valor: 'caravana', texto: '🐪 Seguir a *caravana* de comerciantes', acao: passo3Sertao },
+                        { valor: 'gruta', texto: '🕯️ Entrar na *gruta* misteriosa', acao: passo3Sertao },
+                        { valor: 'oasis', texto: '💧 Buscar o *oásis* escondido', acao: passo3Sertao },
+                        { valor: 'viajante', texto: '👤 Conversar com o *viajante* solitário', acao: passo3Sertao }
                     ]
                 );
             } else if (valor === 'caatinga') {
                 exibir(
                     `"Na *Caatinga* os espinhos ferem, o vento é cortante,
-                    João encontra uma *cabana* de uma rezadeira,
-                    E também uma *cobra* gigante na estrada,
-                    Pronta para atacar qualquer aventureiro.
-
-                    João precisa decidir seu caminho:
-                    A cabana da rezadeira ou a cobra?"`,
+                    João encontra quatro caminhos interessantes:
+                    Uma *cabana*, uma *cobra*, uma *flor* rara e um *rio* seco.`,
                     [
-                        { valor: 'cabana', texto: '🏠 Entrar na *cabana*', acao: passo3Caatinga },
-                        { valor: 'cobra', texto: '🐍 Enfrentar a *cobra*', acao: passo3Caatinga }
+                        { valor: 'cabana', texto: '🏠 Entrar na *cabana* da rezadeira', acao: passo3Caatinga },
+                        { valor: 'cobra', texto: '🐍 Enfrentar a *cobra* gigante', acao: passo3Caatinga },
+                        { valor: 'flor', texto: '🌸 Buscar a *flor* que cura tudo', acao: passo3Caatinga },
+                        { valor: 'rio', texto: '🌊 Seguir o *rio* seco', acao: passo3Caatinga }
+                    ]
+                );
+            } else if (valor === 'litoral') {
+                exibir(
+                    `"No *Litoral* a brisa é suave, o mar é azul,
+                    João encontra quatro caminhos legais:
+                    Um *pescador*, uma *moça*, um *tesouro* e um *navio*.`,
+                    [
+                        { valor: 'pescador', texto: '⛵ Ir com o *pescador* para o mar', acao: passo3Litoral },
+                        { valor: 'moca', texto: '🏖️ Ficar com a *moça* na praia', acao: passo3Litoral },
+                        { valor: 'tesouro', texto: '💰 Procurar o *tesouro* enterrado', acao: passo3Litoral },
+                        { valor: 'navio', texto: '🚢 Embarcar no *navio* negreiro', acao: passo3Litoral }
                     ]
                 );
             } else {
                 exibir(
-                    `"No *Litoral* a brisa é suave, o mar é azul,
-                    João encontra um *pescador* com seu barco,
-                    E também uma *moça* bonita na areia,
-                    Que parece querer lhe contar um segredo.
-
-                    João precisa escolher seu destino:
-                    O pescador ou a moça misteriosa?"`,
+                    `"Na *Serra* a neblina é densa, o frio é cortante,
+                    João encontra quatro caminhos importantes:
+                    Um *mosteiro*, uma *cachoeira*, uma *tribo* e uma *mina*.`,
                     [
-                        { valor: 'pescador', texto: '⛵ Ir com o *pescador*', acao: passo3Litoral },
-                        { valor: 'moca', texto: '🏖️ Ficar com a *moça*', acao: passo3Litoral }
+                        { valor: 'mosteiro', texto: '⛪ Entrar no *mosteiro* antigo', acao: passo3Serra },
+                        { valor: 'cachoeira', texto: '💦 Seguir a *cachoeira* gelada', acao: passo3Serra },
+                        { valor: 'tribo', texto: '🏹 Visitar a *tribo* indígena', acao: passo3Serra },
+                        { valor: 'mina', texto: '⛏️ Explorar a *mina* abandonada', acao: passo3Serra }
                     ]
                 );
             }
         }
 
+        // PASSO 3: FINAIS DO SERTÃO (4 finais)
         function passo3Sertao(valor) {
-            addCaminho(valor === 'caravana' ? 'Caravana' : 'Gruta');
+            const nomes = { 
+                caravana: 'Caravana', 
+                gruta: 'Gruta', 
+                oasis: 'Oásis',
+                viajante: 'Viajante'
+            };
+            addCaminho(nomes[valor]);
 
             if (valor === 'caravana') {
                 exibir(
-                    `"João seguiu a caravana pelo sertão,
-                    Aprendeu a negociar, virou um *mercador*.
-                    Enriqueceu, mas nunca esqueceu sua terra,
-                    Construiu uma escola e um poço para o povo.
+                    `"João seguiu a caravana pelo sertão afora,
+                    Aprendeu a negociar, virou um grande *mercador*.
+                    Ficou rico, mas ajudou sua gente querida,
+                    Construiu escola, poço e trouxe nova vida.
 
-                    João se tornou um *herói* do sertão,
-                    Respeitado por todos, com grande coração.
-                    Sua história é de *superação* e de amor,
-                    Um final feliz para o nosso andador!"`,
+                    🏆 *FINAL DO MERCADOR BONDOSO*
+                    João se tornou o homem mais respeitado do sertão,
+                    E sua história é cantada em toda a nação!"`,
+                    [],
+                    true
+                );
+            } else if (valor === 'gruta') {
+                exibir(
+                    `"João entrou na gruta escura e encontrou um tesouro,
+                    Mas também um feitiço que o deixou com muito ouro.
+                    A ganância tomou conta do seu coração,
+                    E João perdeu a essência, virou um vilão.
+
+                    🏆 *FINAL DO GANANCIOSO*
+                    João ficou rico, mas perdeu a todos os amigos,
+                    E viveu sozinho, cercado de inimigos!"`,
+                    [],
+                    true
+                );
+            } else if (valor === 'oasis') {
+                exibir(
+                    `"João encontrou o oásis escondido no sertão,
+                    Água cristalina que deu vida à região.
+                    Fundou uma cidade próspera e acolhedora,
+                    E virou o líder da nova moradora.
+
+                    🏆 *FINAL DO FUNDADOR*
+                    João criou uma cidade no meio do sertão,
+                    E seu nome virou sinônimo de união!"`,
                     [],
                     true
                 );
             } else {
                 exibir(
-                    `"João entrou na gruta escura e sombria,
-                    Encontrou um *tesouro* que ninguém sabia.
-                    Mas a gruta era de um *feiticeiro* malvado,
-                    Que prendeu João num feitiço dourado.
+                    `"João conversou com o viajante solitário,
+                    Que era na verdade um sábio visionário.
+                    Ensinou a João os segredos da vida,
+                    E João virou um poeta, com alma iluminada.
 
-                    João usou sua esperteza para escapar,
-                    Mas o tesouro o fez um homem ganancioso.
-                    Perdeu a simplicidade, perdeu a humildade,
-                    E seu final foi triste, de muita vaidade!"`,
+                    🏆 *FINAL DO POETA*
+                    João virou um grande trovador do sertão,
+                    E suas poesias ecoam pelo chão!"`,
                     [],
                     true
                 );
             }
         }
 
+        // PASSO 3: FINAIS DA CAATINGA (4 finais)
         function passo3Caatinga(valor) {
-            addCaminho(valor === 'cabana' ? 'Cabana' : 'Cobra');
+            const nomes = { 
+                cabana: 'Cabana', 
+                cobra: 'Cobra', 
+                flor: 'Flor',
+                rio: 'Rio'
+            };
+            addCaminho(nomes[valor]);
 
             if (valor === 'cabana') {
                 exibir(
-                    `"João entrou na cabana da rezadeira,
-                    Ela lhe ensinou os segredos da floresta.
-                    João virou um *curandeiro* famoso,
-                    Curando os doentes com ervas e rezas.
+                    `"João entrou na cabana da velha rezadeira,
+                    Aprendeu os segredos das ervas e poções.
+                    Virou curandeiro famoso pela região,
+                    Curando os doentes com sua sabedoria em ação.
 
-                    Mas a inveja dos outros o perseguiu,
-                    E João teve que partir, deixando seu lar.
-                    Virou um andarilho, um sábio viajante,
-                    Curando por onde passava, um verdadeiro amante!"`,
+                    🏆 *FINAL DO CURANDEIRO*
+                    João virou o maior curandeiro da caatinga,
+                    E sua fama atravessou até a beira da tinga!"`,
+                    [],
+                    true
+                );
+            } else if (valor === 'cobra') {
+                exibir(
+                    `"João enfrentou a cobra gigante com seu facão,
+                    Uma luta brava que durou até o sol se pôr.
+                    Matou a cobra, mas foi picado no calcanhar,
+                    Sobreviveu e aprendeu que a violência não é o lar.
+
+                    🏆 *FINAL DO GUERREIRO*
+                    João ficou manco, mas virou uma lenda viva,
+                    E sua história serve de alerta e de cativa!"`,
+                    [],
+                    true
+                );
+            } else if (valor === 'flor') {
+                exibir(
+                    `"João encontrou a flor que cura todos os males,
+                    Uma planta rara que brilha como os cristais.
+                    Levou a flor para o povo e curou a todos,
+                    E virou um santo vivo, cheio de louvores.
+
+                    🏆 *FINAL DO SANTO*
+                    João virou protetor da caatinga inteira,
+                    E sua memória é eterna, verdadeira e ligeira!"`,
                     [],
                     true
                 );
             } else {
                 exibir(
-                    `"João enfrentou a cobra gigante com bravura,
-                    Lutou com seu facão, com muita coragem.
-                    Matou a cobra, mas foi picado no pé,
-                    Quase morreu, mas sobreviveu com fé.
+                    `"João seguiu o rio seco por dias e noites,
+                    Encontrou uma cachoeira subterrânea de grande porte.
+                    Descobriu água para todo o sertão sedento,
+                    E salvou milhares com seu achado violento.
 
-                    Aprendeu que *violência* não é a solução,
-                    Ficou manco, mas ganhou uma lição.
-                    Sua história serve de alerta para todos,
-                    Que a *sabedoria* vence os maiores odores!"`,
+                    🏆 *FINAL DO SALVADOR*
+                    João trouxe água para todo o sertão,
+                    E seu nome virou sinônimo de salvação!"`,
                     [],
                     true
                 );
             }
         }
 
+        // PASSO 3: FINAIS DO LITORAL (4 finais)
         function passo3Litoral(valor) {
-            addCaminho(valor === 'pescador' ? 'Pescador' : 'Moça');
+            const nomes = { 
+                pescador: 'Pescador', 
+                moca: 'Moça', 
+                tesouro: 'Tesouro',
+                navio: 'Navio'
+            };
+            addCaminho(nomes[valor]);
 
             if (valor === 'pescador') {
                 exibir(
                     `"João foi com o pescador para o alto-mar,
-                    Enfrentaram tempestades, aprenderam a pescar.
-                    João virou um *pescador* experiente,
-                    Mas sentia falta do sertão, da terra quente.
+                    Aprendeu as artes da pesca e do navegar.
+                    Virou o melhor pescador da costa inteira,
+                    Mas sempre sentiu falta da terra poeirenta.
 
-                    Um dia, uma *sereia* o encantou com seu canto,
-                    E João ficou entre o mar e a terra, num encanto.
-                    Viveu entre dois mundos, sem nunca encontrar,
-                    A paz que tanto buscava, no seu caminhar!"`,
+                    🏆 *FINAL DO PESCADOR*
+                    João viveu entre o mar e a terra, em paz,
+                    E sua história é cantada pelos pescadores audazes!"`,
+                    [],
+                    true
+                );
+            } else if (valor === 'moca') {
+                exibir(
+                    `"João ficou com a moça na beira da praia,
+                    Ela era uma princesa disfarçada em trajes de arraia.
+                    Casou-se com ela e virou rei da região,
+                    Um homem justo que governava com paixão.
+
+                    🏆 *FINAL DO REI*
+                    João virou o rei mais amado do litoral,
+                    E seu reinado foi justo, bondoso e leal!"`,
+                    [],
+                    true
+                );
+            } else if (valor === 'tesouro') {
+                exibir(
+                    `"João encontrou um tesouro enterrado na areia,
+                    Moedas de ouro e joias de grande valia.
+                    Comprou um barco e virou um grande comerciante,
+                    Mas a solidão o acompanhou por todo instante.
+
+                    🏆 *FINAL DO RICO SOLITÁRIO*
+                    João ficou muito rico, mas profundamente só,
+                    E aprendeu que dinheiro não traz amor nem nó!"`,
                     [],
                     true
                 );
             } else {
                 exibir(
-                    `"João ficou com a moça na beira da praia,
-                    Ela era uma *princesa* disfarçada em trajes de araia.
-                    Casaram-se e viveram num castelo à beira-mar,
-                    João virou *rei* de uma terra, sem precisar lutar.
+                    `"João embarcou no navio negreiro e foi viajar,
+                    Conheceu terras distantes, culturas e mares.
+                    Virou um explorador famoso no mundo inteiro,
+                    E escreveu livros sobre seu roteiro.
 
-                    Mas a vida de rei não era o que sonhou,
-                    E João percebeu que o *amor verdadeiro* o transformou.
-                    Governou com justiça e com compaixão,
-                    E seu nome virou lenda em toda a nação!"`,
+                    🏆 *FINAL DO EXPLORADOR*
+                    João viajou o mundo todo e conheceu,
+                    Mas no fim, o sertão foi o lugar que ele mais amou!"`,
+                    [],
+                    true
+                );
+            }
+        }
+
+        // PASSO 3: FINAIS DA SERRA (4 finais)
+        function passo3Serra(valor) {
+            const nomes = { 
+                mosteiro: 'Mosteiro', 
+                cachoeira: 'Cachoeira', 
+                tribo: 'Tribo',
+                mina: 'Mina'
+            };
+            addCaminho(nomes[valor]);
+
+            if (valor === 'mosteiro') {
+                exibir(
+                    `"João entrou no mosteiro antigo e silencioso,
+                    Encontrou monges sábios, um lugar glorioso.
+                    Virou um monge estudioso e aprendizado,
+                    E descobriu o sentido da vida, em paz de verdade.
+
+                    🏆 *FINAL DO MONGE*
+                    João virou um grande mestre espiritual,
+                    E sua sabedoria ecoa por todo o local!"`,
+                    [],
+                    true
+                );
+            } else if (valor === 'cachoeira') {
+                exibir(
+                    `"João seguiu a cachoeira gelada e cristalina,
+                    Encontrou pedras preciosas de grande estima.
+                    Virou um garimpeiro próspero e viajante,
+                    Mas a simplicidade do sertão ficou distante.
+
+                    🏆 *FINAL DO GARIMPEIRO*
+                    João ficou rico com as pedras da serra,
+                    Mas nunca mais encontrou a paz da sua terra!"`,
+                    [],
+                    true
+                );
+            } else if (valor === 'tribo') {
+                exibir(
+                    `"João visitou a tribo indígena na serra,
+                    Aprendeu seus costumes, sua dança e guerra.
+                    Virou um guerreiro respeitado na aldeia,
+                    E protegeu a floresta com sua lança e ideia.
+
+                    🏆 *FINAL DO GUERREIRO INDÍGENA*
+                    João virou protetor da mata e da serra,
+                    E viveu em harmonia com a natureza terra!"`,
+                    [],
+                    true
+                );
+            } else {
+                exibir(
+                    `"João explorou a mina abandonada na serra,
+                    Encontrou cristais que brilham como a terra.
+                    Virou um minerador famoso e respeitado,
+                    Mas perdeu a saúde em busca do ouro brilhado.
+
+                    🏆 *FINAL DO MINERADOR*
+                    João enriqueceu com os cristais da mina,
+                    Mas a saúde perdeu pela longa jornada!"`,
                     [],
                     true
                 );
